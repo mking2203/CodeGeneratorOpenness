@@ -28,6 +28,8 @@ using Siemens.Engineering.Hmi.RuntimeScripting;
 using Siemens.Engineering.Compiler;
 using Siemens.Engineering.Library;
 using System.IO;
+using System.Security.Cryptography;
+using Microsoft.Win32;
 
 namespace CodeGeneratorOpenness
 {
@@ -40,6 +42,8 @@ namespace CodeGeneratorOpenness
         public MainForm()
         {
             InitializeComponent();
+
+            CalcHash();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -111,7 +115,6 @@ namespace CodeGeneratorOpenness
 
                 IterateThroughDevices(project);
             }
-                 
         }
 
 
@@ -124,14 +127,32 @@ namespace CodeGeneratorOpenness
             }
             Console.WriteLine(String.Format("Iterate through {0} device(s)", project.Devices.Count));
 
+            // search through devices
             foreach (Device device in project.Devices)
             {
-                Console.WriteLine(String.Format("Device: \"{0}\".", device.Name));
-                listBox1.Items.Add(device.Name);
+                if (device.TypeIdentifier != null)
+                {
+                    // we search only for PLCs
+                    if (device.TypeIdentifier == "System:Device.S71500")
+                    {
+                        Console.WriteLine(String.Format("Found {0}", device.Name));
+                        listBox1.Items.Add(device.Name);
+
+                        // lets get the CPU
+                        foreach (DeviceItem item in device.DeviceItems)
+                        {
+                            if (item.Classification.ToString() == "CPU")
+                            {
+                                Console.WriteLine(String.Format("Found {0}", item.Name));
+                                listBox2.Items.Add(item.Name);
+                            }
+                        }
+                    }
+                }
             }
-            Console.WriteLine();
         }
 
+        // close project
         private void button2_Click(object sender, EventArgs e)
         {
             if (project != null)
@@ -141,6 +162,33 @@ namespace CodeGeneratorOpenness
                 project.Close();
                 project = null;
             }
+        }
+
+        // my test area
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
+
+        public void CalcHash()
+        {
+            string applicationPath = Application.StartupPath + "\\CodeGeneratorOpenness.exe";
+            string lastWriteTimeUtcFormatted = String.Empty;
+            DateTime lastWriteTimeUtc;
+            HashAlgorithm hashAlgorithm = SHA256.Create();
+            FileStream stream = File.OpenRead(applicationPath);
+            byte[] hash = hashAlgorithm.ComputeHash(stream);
+            // this is how the hash should appear in the .reg file
+            string convertedHash = Convert.ToBase64String(hash);
+            FileInfo fileInfo = new FileInfo(applicationPath);
+            lastWriteTimeUtc = fileInfo.LastWriteTimeUtc; // this is how the last write time should be formatted
+            lastWriteTimeUtcFormatted = lastWriteTimeUtc.ToString(@"yyyy\/MM\/dd HH:mm:ss.fff");
+
+            Console.WriteLine("CRC _: " + convertedHash);
+            Console.WriteLine("Date : " + lastWriteTimeUtcFormatted);
+
         }
     }
 }
