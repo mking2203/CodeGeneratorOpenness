@@ -24,29 +24,21 @@ using Siemens.Engineering.SW.Blocks;
 using Siemens.Engineering.SW.ExternalSources;
 using Siemens.Engineering.SW.Tags;
 using Siemens.Engineering.SW.Types;
-using Siemens.Engineering.Hmi;
-using HmiTarget = Siemens.Engineering.Hmi.HmiTarget;
-using Siemens.Engineering.Hmi.Tag;
-using Siemens.Engineering.Hmi.Screen;
-using Siemens.Engineering.Hmi.Cycle;
-using Siemens.Engineering.Hmi.Communication;
-using Siemens.Engineering.Hmi.Globalization;
-using Siemens.Engineering.Hmi.TextGraphicList;
-using Siemens.Engineering.Hmi.RuntimeScripting;
 using Siemens.Engineering.Compiler;
 using Siemens.Engineering.Library;
 using System.IO;
 using System.Security.Cryptography;
 using Microsoft.Win32;
+using System.Globalization;
 
 namespace CodeGeneratorOpenness
 {
     public partial class MainForm : Form
     {
-        // just lazzy for now
+        // just a little lazzy
         public static TiaPortal tiaPortal = null;
         public static Project project = null;
-        public static Device Root = null;
+        public static PlcSoftware software = null;
 
         public MainForm()
         {
@@ -56,6 +48,17 @@ namespace CodeGeneratorOpenness
             CalcHash();
         }
 
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // dispose objects
+
+            project = null;
+
+            if (tiaPortal != null)
+                tiaPortal.Dispose();
+        }
+
+        // open project
         private void button1_Click(object sender, EventArgs e)
         {
             if (project == null)
@@ -129,7 +132,6 @@ namespace CodeGeneratorOpenness
             }
         }
 
-
         private void IterateThroughDevices(Project project)
         {
             if (project == null)
@@ -157,6 +159,19 @@ namespace CodeGeneratorOpenness
                             {
                                 Console.WriteLine(String.Format("Found {0}", item.Name));
                                 listBox2.Items.Add(item.Name);
+
+                                SoftwareContainer softwareContainer = ((IEngineeringServiceProvider)item).GetService<SoftwareContainer>();
+                                if (softwareContainer != null)
+                                {
+                                    software = softwareContainer.Software as PlcSoftware;
+                                    Console.WriteLine("Found : " + software.Name);
+
+                                    foreach (PlcBlock bl in software.BlockGroup.Blocks)
+                                    {
+                                        Console.WriteLine("Found block : " + bl.Name);
+                                        listBox3.Items.Add(bl.Name);
+                                    }
+                                }
                             }
                         }
                     }
@@ -170,18 +185,40 @@ namespace CodeGeneratorOpenness
             if (project != null)
             {
                 listBox1.Items.Clear();
+                listBox2.Items.Clear();
+                listBox3.Items.Clear();
 
                 project.Close();
                 project = null;
             }
         }
 
-        // my test area
+        // language test for DE/EN
         private void button3_Click(object sender, EventArgs e)
         {
+            if (project != null)
+            {
+                LanguageSettings languageSettings = project.LanguageSettings;
+                LanguageComposition supportedLanguages = languageSettings.Languages;
+                LanguageAssociation activeLanguages = languageSettings.ActiveLanguages;
 
+                Language supportedGermanLanguage = supportedLanguages.Find(CultureInfo.GetCultureInfo("de-DE"));
+                Language supportedEnglishLanguage = supportedLanguages.Find(CultureInfo.GetCultureInfo("en-GB"));
+
+                // add german if needed
+                Language l = activeLanguages.Find(CultureInfo.GetCultureInfo("de-DE"));
+                if (l == null)
+                    activeLanguages.Add(supportedGermanLanguage);
+                // add english if needed
+                l = activeLanguages.Find(CultureInfo.GetCultureInfo("en-GB"));
+                if (l == null)
+                    activeLanguages.Add(supportedEnglishLanguage);
+
+                // set edit languages
+                languageSettings.EditingLanguage = supportedGermanLanguage;
+                languageSettings.ReferenceLanguage = supportedGermanLanguage;
+            }
         }
-
 
         public void CalcHash()
         {
@@ -195,23 +232,39 @@ namespace CodeGeneratorOpenness
             // this is how the hash should appear in the .reg file
             string convertedHash = Convert.ToBase64String(hash);
             FileInfo fileInfo = new FileInfo(applicationPath);
-            lastWriteTimeUtc = fileInfo.LastWriteTimeUtc; // this is how the last write time should be formatted
+            lastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
+            // this is how the last write time should be formatted
             lastWriteTimeUtcFormatted = lastWriteTimeUtc.ToString(@"yyyy\/MM\/dd HH:mm:ss.fff");
 
             Console.WriteLine("CRC _: " + convertedHash);
             Console.WriteLine("Date : " + lastWriteTimeUtcFormatted);
 
-            // we set the key in the registry rto avoid the firewall each time
-            RegistryKey rk = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Siemens\Automation\Openness\16.0\Whitelist\CodeGeneratorOpenness.exe\Entry", true);
-            rk.SetValue("FileHash", convertedHash);
-            rk.SetValue("DateModified", lastWriteTimeUtcFormatted);
-
+            // we set the key in the registry to avoid the firewall each time
+            try
+            {
+                // first time we need to ack, then the key is present
+                RegistryKey rk = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Siemens\Automation\Openness\16.0\Whitelist\CodeGeneratorOpenness.exe\Entry", true);
+                rk.SetValue("FileHash", convertedHash);
+                rk.SetValue("DateModified", lastWriteTimeUtcFormatted);
+            }
+            catch
+            { }
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        // test area
+        private void button4_Click(object sender, EventArgs e)
         {
-            if (tiaPortal != null)
-                tiaPortal.Dispose();
+            if (software == null)
+            {
+                Console.WriteLine("Software cannot be null");
+                return;
+            }
+
+            string fPath = Application.StartupPath + "\\TestFC1.xml";
+
+            FileInfo f = new FileInfo(fPath);
+            software.BlockGroup.Blocks.Import(f, ImportOptions.Override);
+
         }
     }
 }

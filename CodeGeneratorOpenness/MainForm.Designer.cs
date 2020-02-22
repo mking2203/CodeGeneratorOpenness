@@ -35,6 +35,9 @@
             this.button3 = new System.Windows.Forms.Button();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
+            this.listBox3 = new System.Windows.Forms.ListBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // button1
@@ -80,7 +83,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(97, 43);
             this.button3.TabIndex = 4;
-            this.button3.Text = "Test";
+            this.button3.Text = "Languages";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
@@ -101,11 +104,41 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "CPU";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(36, 214);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(97, 43);
+            this.button4.TabIndex = 7;
+            this.button4.Text = "Import FC";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
+            // listBox3
+            // 
+            this.listBox3.FormattingEnabled = true;
+            this.listBox3.Location = new System.Drawing.Point(546, 39);
+            this.listBox3.Name = "listBox3";
+            this.listBox3.Size = new System.Drawing.Size(186, 147);
+            this.listBox3.TabIndex = 8;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(543, 23);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(39, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Blocks";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(585, 450);
+            this.ClientSize = new System.Drawing.Size(819, 450);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.listBox3);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.listBox2);
             this.Controls.Add(this.button3);
@@ -134,6 +167,9 @@
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.ListBox listBox3;
+        private System.Windows.Forms.Label label3;
     }
 }
 
