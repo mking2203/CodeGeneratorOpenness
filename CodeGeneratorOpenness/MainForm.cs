@@ -1,4 +1,12 @@
-﻿using System;
+﻿///
+/// Sample applicatin for automated code generation for Siemens TIA Portal with Openness Interface
+/// 
+/// by Mark König @ 02/2020
+/// 
+/// build to 64 bit, since we nedd to access the registry for the TIA firewall
+///
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -38,11 +46,13 @@ namespace CodeGeneratorOpenness
         // just lazzy for now
         public static TiaPortal tiaPortal = null;
         public static Project project = null;
+        public static Device Root = null;
 
         public MainForm()
         {
             InitializeComponent();
 
+            // avoid firewall
             CalcHash();
         }
 
@@ -60,7 +70,7 @@ namespace CodeGeneratorOpenness
                     break;
                 }
 
-                // we dont habe a instance then open a new instance
+                // we don't habe an instance then open a new instance
                 if (tiaPortal == null)
                 {
                     tiaPortal = new TiaPortal(TiaPortalMode.WithUserInterface);
@@ -73,7 +83,7 @@ namespace CodeGeneratorOpenness
                 // projects available ?
                 Console.WriteLine("TIA projects " + projects.Count.ToString());
 
-                // no open project the open dialog
+                // no open project - then open file dialog
                 if (projects.Count == 0)
                 {
                     Console.WriteLine("Opening Project...");
@@ -108,11 +118,13 @@ namespace CodeGeneratorOpenness
                 }
                 else
                 {
+                    // for now we use the first project
                     project = tiaPortal.Projects[0];
                 }
 
                 Console.WriteLine(String.Format("Project {0} is open", project.Path.FullName));
 
+                // loop through the data
                 IterateThroughDevices(project);
             }
         }
@@ -138,7 +150,7 @@ namespace CodeGeneratorOpenness
                         Console.WriteLine(String.Format("Found {0}", device.Name));
                         listBox1.Items.Add(device.Name);
 
-                        // lets get the CPU
+                        // let's get the CPU
                         foreach (DeviceItem item in device.DeviceItems)
                         {
                             if (item.Classification.ToString() == "CPU")
@@ -171,9 +183,9 @@ namespace CodeGeneratorOpenness
         }
 
 
-
         public void CalcHash()
         {
+            // calc the hash for the file for the firwall settings
             string applicationPath = Application.StartupPath + "\\CodeGeneratorOpenness.exe";
             string lastWriteTimeUtcFormatted = String.Empty;
             DateTime lastWriteTimeUtc;
@@ -189,6 +201,17 @@ namespace CodeGeneratorOpenness
             Console.WriteLine("CRC _: " + convertedHash);
             Console.WriteLine("Date : " + lastWriteTimeUtcFormatted);
 
+            // we set the key in the registry rto avoid the firewall each time
+            RegistryKey rk = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Siemens\Automation\Openness\16.0\Whitelist\CodeGeneratorOpenness.exe\Entry", true);
+            rk.SetValue("FileHash", convertedHash);
+            rk.SetValue("DateModified", lastWriteTimeUtcFormatted);
+
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (tiaPortal != null)
+                tiaPortal.Dispose();
         }
     }
 }
