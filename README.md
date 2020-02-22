@@ -17,8 +17,8 @@ Functions added:<br>
 -open TIA with interface (first instance or new instance)<br>
 -open project file via file dialog<br>
 -close project<br>
--add / change language for editing
--import a FC
+-add / change language for editing<br>
+-import a FC<br>
 
 
 
