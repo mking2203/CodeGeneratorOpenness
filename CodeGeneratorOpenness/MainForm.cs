@@ -166,16 +166,48 @@ namespace CodeGeneratorOpenness
                                     software = softwareContainer.Software as PlcSoftware;
                                     Console.WriteLine("Found : " + software.Name);
 
-                                    foreach (PlcBlock bl in software.BlockGroup.Blocks)
-                                    {
-                                        Console.WriteLine("Found block : " + bl.Name);
-                                        listBox3.Items.Add(bl.Name);
-                                    }
+                                    // start update
+                                    treeView1.BeginUpdate();
+
+                                    // root node
+                                    TreeNode root = new TreeNode(software.Name);
+                                    treeView1.Nodes.Add(root);
+
+                                    AddPlcBlocks(software.BlockGroup, root);
+
+                                    // end update
+                                    treeView1.EndUpdate();
+                                    
+                                    root.Expand();
                                 }
                             }
                         }
                     }
                 }
+            }
+        }
+
+        private void AddPlcBlocks(PlcBlockGroup plcGroup, TreeNode node)
+        {
+            // first add all plc blocks
+            foreach (PlcBlock plcBlock in plcGroup.Blocks)
+            {
+                Console.WriteLine("Found block : " + plcBlock.Name);
+
+                TreeNode n = new TreeNode(plcBlock.Name);
+                n.Tag = plcBlock;
+                node.Nodes.Add(n);
+            }
+            // then add groups and search recursive
+            foreach (PlcBlockGroup group in plcGroup.Groups)
+            {
+                Console.WriteLine("Found group : " + group.Name);
+
+                TreeNode n = new TreeNode(group.Name);
+                n.Tag = group;
+               
+                AddPlcBlocks(group, n);
+                node.Nodes.Add(n);
             }
         }
 
@@ -186,7 +218,7 @@ namespace CodeGeneratorOpenness
             {
                 listBox1.Items.Clear();
                 listBox2.Items.Clear();
-                listBox3.Items.Clear();
+                treeView1.Nodes.Clear();
 
                 project.Close();
                 project = null;
@@ -217,6 +249,8 @@ namespace CodeGeneratorOpenness
                 // set edit languages
                 languageSettings.EditingLanguage = supportedGermanLanguage;
                 languageSettings.ReferenceLanguage = supportedGermanLanguage;
+
+                
             }
         }
 
