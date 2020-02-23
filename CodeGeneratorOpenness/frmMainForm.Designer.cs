@@ -30,14 +30,14 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMainForm));
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnOpen = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.button3 = new System.Windows.Forms.Button();
+            this.btnLanguage = new System.Windows.Forms.Button();
             this.listBox2 = new System.Windows.Forms.ListBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btnImport = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
@@ -49,28 +49,32 @@
             this.mnuGroupDelete = new System.Windows.Forms.MenuItem();
             this.ctxSoftware = new System.Windows.Forms.ContextMenu();
             this.mnuSofwareAdd = new System.Windows.Forms.MenuItem();
-            this.button5 = new System.Windows.Forms.Button();
+            this.btnReload = new System.Windows.Forms.Button();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.txtProject = new System.Windows.Forms.ToolStripStatusLabel();
+            this.btnExit = new System.Windows.Forms.Button();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // button1
+            // btnOpen
             // 
-            this.button1.Location = new System.Drawing.Point(36, 39);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(97, 43);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Open project";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnOpen.Location = new System.Drawing.Point(36, 39);
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(97, 43);
+            this.btnOpen.TabIndex = 0;
+            this.btnOpen.Text = "Open project";
+            this.btnOpen.UseVisualStyleBackColor = true;
+            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
-            // button2
+            // btnClose
             // 
-            this.button2.Location = new System.Drawing.Point(36, 88);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(97, 43);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Close project";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.btnClose.Location = new System.Drawing.Point(36, 88);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(97, 43);
+            this.btnClose.TabIndex = 1;
+            this.btnClose.Text = "Close project";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // listBox1
             // 
@@ -89,15 +93,15 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "Device";
             // 
-            // button3
+            // btnLanguage
             // 
-            this.button3.Location = new System.Drawing.Point(36, 165);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(97, 43);
-            this.button3.TabIndex = 4;
-            this.button3.Text = "Languages";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.btnLanguage.Location = new System.Drawing.Point(36, 165);
+            this.btnLanguage.Name = "btnLanguage";
+            this.btnLanguage.Size = new System.Drawing.Size(97, 43);
+            this.btnLanguage.TabIndex = 4;
+            this.btnLanguage.Text = "Languages";
+            this.btnLanguage.UseVisualStyleBackColor = true;
+            this.btnLanguage.Click += new System.EventHandler(this.btnLanguage_Click);
             // 
             // listBox2
             // 
@@ -116,15 +120,15 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "CPU";
             // 
-            // button4
+            // btnImport
             // 
-            this.button4.Location = new System.Drawing.Point(36, 214);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(97, 43);
-            this.button4.TabIndex = 7;
-            this.button4.Text = "Import FC";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.btnImport.Location = new System.Drawing.Point(36, 214);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(97, 43);
+            this.btnImport.TabIndex = 7;
+            this.btnImport.Text = "Import FC";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // label3
             // 
@@ -157,6 +161,8 @@
             this.imageList1.Images.SetKeyName(4, "FC.png");
             this.imageList1.Images.SetKeyName(5, "DB.png");
             this.imageList1.Images.SetKeyName(6, "safeDB.png");
+            this.imageList1.Images.SetKeyName(7, "safeOB.png");
+            this.imageList1.Images.SetKeyName(8, "safeFB.png");
             // 
             // ctxBlock
             // 
@@ -204,32 +210,59 @@
             this.mnuSofwareAdd.Text = "Add group";
             this.mnuSofwareAdd.Click += new System.EventHandler(this.menuSofwareAdd_Click);
             // 
-            // button5
+            // btnReload
             // 
-            this.button5.Location = new System.Drawing.Point(365, 419);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(75, 23);
-            this.button5.TabIndex = 11;
-            this.button5.Text = "Reload";
-            this.button5.UseVisualStyleBackColor = true;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            this.btnReload.Location = new System.Drawing.Point(365, 419);
+            this.btnReload.Name = "btnReload";
+            this.btnReload.Size = new System.Drawing.Size(75, 23);
+            this.btnReload.TabIndex = 11;
+            this.btnReload.Text = "Reload";
+            this.btnReload.UseVisualStyleBackColor = true;
+            this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.txtProject});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 493);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(819, 22);
+            this.statusStrip1.TabIndex = 12;
+            // 
+            // txtProject
+            // 
+            this.txtProject.Name = "txtProject";
+            this.txtProject.Size = new System.Drawing.Size(47, 17);
+            this.txtProject.Text = "Project:";
+            // 
+            // btnExit
+            // 
+            this.btnExit.Location = new System.Drawing.Point(36, 370);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(97, 43);
+            this.btnExit.TabIndex = 13;
+            this.btnExit.Text = "Exit";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // frmMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(819, 450);
-            this.Controls.Add(this.button5);
+            this.ClientSize = new System.Drawing.Size(819, 515);
+            this.Controls.Add(this.btnExit);
+            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.btnReload);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.button4);
+            this.Controls.Add(this.btnImport);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.listBox2);
-            this.Controls.Add(this.button3);
+            this.Controls.Add(this.btnLanguage);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.listBox1);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.btnOpen);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -237,6 +270,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Code Gererator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -244,14 +279,14 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnOpen;
+        private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button btnLanguage;
         private System.Windows.Forms.ListBox listBox2;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TreeView treeView1;
         internal System.Windows.Forms.ContextMenu ctxBlock;
@@ -262,8 +297,11 @@
         private System.Windows.Forms.MenuItem menuItem3;
         internal System.Windows.Forms.ContextMenu ctxSoftware;
         internal System.Windows.Forms.MenuItem mnuSofwareAdd;
-        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.Button btnReload;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel txtProject;
+        private System.Windows.Forms.Button btnExit;
     }
 }
 

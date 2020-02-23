@@ -52,6 +52,7 @@ namespace CodeGeneratorOpenness
         {
             // dispose objects
 
+            software = null;
             project = null;
 
             if (tiaPortal != null)
@@ -59,8 +60,9 @@ namespace CodeGeneratorOpenness
         }
 
         // open project
-        private void button1_Click(object sender, EventArgs e)
+        private void btnOpen_Click(object sender, EventArgs e)
         {
+            // if no project is open
             if (project == null)
             {
                 // see if we have a open instance and use the first one
@@ -116,7 +118,7 @@ namespace CodeGeneratorOpenness
                             }
                         }
                         else
-                            Application.Exit(); // no file selected
+                            return; // no file selected
                     }
                 }
                 else
@@ -125,7 +127,8 @@ namespace CodeGeneratorOpenness
                     project = tiaPortal.Projects[0];
                 }
 
-                Console.WriteLine(String.Format("Project {0} is open", project.Path.FullName));
+                //Console.WriteLine(String.Format("Project {0} is open", project.Path.FullName));
+                txtProject.Text = "Project: " + project.Name;
 
                 // loop through the data
                 IterateThroughDevices(project);
@@ -207,7 +210,7 @@ namespace CodeGeneratorOpenness
             // first add all plc blocks
             foreach (PlcBlock plcBlock in plcGroup.Blocks)
             {
-                Console.WriteLine("Found block : " + plcBlock.Name + " / " + plcBlock.ProgrammingLanguage);
+                //Console.WriteLine("Found block : " + plcBlock.Name + " / " + plcBlock.ProgrammingLanguage);
 
                 TreeNode n = new TreeNode(plcBlock.Name);
                 n.Tag = plcBlock;
@@ -216,15 +219,20 @@ namespace CodeGeneratorOpenness
                     n.ImageIndex = 2;
                     Siemens.Engineering.SW.Blocks.OB ob = (Siemens.Engineering.SW.Blocks.OB)plcBlock;
                     if (ob.SecondaryType.Contains("Safe"))
+                    {
                         n.BackColor = Color.Yellow;
+                        n.ImageIndex = 7;
+                    }
                 }
                 if (plcBlock is Siemens.Engineering.SW.Blocks.FB)
                 {
                     n.ImageIndex = 3;
                     Siemens.Engineering.SW.Blocks.FB fb = (Siemens.Engineering.SW.Blocks.FB)plcBlock;
-                    if (fb.ProgrammingLanguage == ProgrammingLanguage.F_LAD)
+                    if ((fb.ProgrammingLanguage == ProgrammingLanguage.F_LAD) ||
+                        (fb.ProgrammingLanguage == ProgrammingLanguage.F_FBD))
                     {
                         n.BackColor = Color.Yellow;
+                        n.ImageIndex = 8;
                     }
 
                 }
@@ -256,14 +264,16 @@ namespace CodeGeneratorOpenness
 
                 node.Nodes.Add(n);
             }
+
             // then add groups and search recursive
             foreach (PlcBlockGroup group in plcGroup.Groups)
             {
-                Console.WriteLine("Found group : " + group.Name);
+                //Console.WriteLine("Found group : " + group.Name);
 
                 TreeNode n = new TreeNode(group.Name);
                 n.Tag = group;
                 n.ImageIndex = 1;
+                n.SelectedImageIndex = 1;
 
                 AddPlcBlocks(group, n);
                 node.Nodes.Add(n);
@@ -271,7 +281,7 @@ namespace CodeGeneratorOpenness
         }
 
         // close project
-        private void button2_Click(object sender, EventArgs e)
+        private void btnClose_Click(object sender, EventArgs e)
         {
             if (project != null)
             {
@@ -279,13 +289,16 @@ namespace CodeGeneratorOpenness
                 listBox2.Items.Clear();
                 treeView1.Nodes.Clear();
 
+                txtProject.Text = "Project: ";
                 project.Close();
+
+                software = null;
                 project = null;
             }
         }
 
         // language test for DE/EN
-        private void button3_Click(object sender, EventArgs e)
+        private void btnLanguage_Click(object sender, EventArgs e)
         {
             if (project != null)
             {
@@ -346,21 +359,31 @@ namespace CodeGeneratorOpenness
         }
 
         // add a fc for testing
-        private void button4_Click(object sender, EventArgs e)
+        private void btnImport_Click(object sender, EventArgs e)
         {
             if (software == null)
-            {
-                Console.WriteLine("Software cannot be null");
                 return;
+
+            if (treeView1.SelectedNode != null)
+            {
+                var sel = treeView1.SelectedNode.Tag;
+                if (sel is PlcBlockGroup)
+                {
+                    try
+                    {
+                        PlcBlockGroup group = (PlcBlockGroup)sel;
+                        string fPath = Application.StartupPath + "\\TestFC1.xml";
+                        FileInfo f = new FileInfo(fPath);
+                        group.Blocks.Import(f, ImportOptions.Override);
+
+                        IterateThroughDevices(project);
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
             }
-
-            string fPath = Application.StartupPath + "\\TestFC1.xml";
-
-            FileInfo f = new FileInfo(fPath);
-            software.BlockGroup.Blocks.Import(f, ImportOptions.Override);
-
-            IterateThroughDevices(project);
-
         }
 
         // moue click on treeview
@@ -477,9 +500,14 @@ namespace CodeGeneratorOpenness
             }
         }
 
-        private void button5_Click(object sender, EventArgs e)
+        private void btnReload_Click(object sender, EventArgs e)
         {
             IterateThroughDevices(project);
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
         }
     }
 }
