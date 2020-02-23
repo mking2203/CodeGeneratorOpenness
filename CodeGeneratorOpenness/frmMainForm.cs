@@ -207,10 +207,50 @@ namespace CodeGeneratorOpenness
             // first add all plc blocks
             foreach (PlcBlock plcBlock in plcGroup.Blocks)
             {
-                Console.WriteLine("Found block : " + plcBlock.Name);
+                Console.WriteLine("Found block : " + plcBlock.Name + " / " + plcBlock.ProgrammingLanguage);
 
                 TreeNode n = new TreeNode(plcBlock.Name);
                 n.Tag = plcBlock;
+                if (plcBlock is Siemens.Engineering.SW.Blocks.OB)
+                {
+                    n.ImageIndex = 2;
+                    Siemens.Engineering.SW.Blocks.OB ob = (Siemens.Engineering.SW.Blocks.OB)plcBlock;
+                    if (ob.SecondaryType.Contains("Safe"))
+                        n.BackColor = Color.Yellow;
+                }
+                if (plcBlock is Siemens.Engineering.SW.Blocks.FB)
+                {
+                    n.ImageIndex = 3;
+                    Siemens.Engineering.SW.Blocks.FB fb = (Siemens.Engineering.SW.Blocks.FB)plcBlock;
+                    if (fb.ProgrammingLanguage == ProgrammingLanguage.F_LAD)
+                    {
+                        n.BackColor = Color.Yellow;
+                    }
+
+                }
+                if (plcBlock is Siemens.Engineering.SW.Blocks.FC)
+                    n.ImageIndex = 4;
+
+                if (plcBlock is Siemens.Engineering.SW.Blocks.InstanceDB)
+                {
+                    n.ImageIndex = 5;
+                    Siemens.Engineering.SW.Blocks.InstanceDB db = (Siemens.Engineering.SW.Blocks.InstanceDB)plcBlock;
+                    if (db.ProgrammingLanguage == ProgrammingLanguage.F_DB)
+                    {
+                        n.BackColor = Color.Yellow;
+                    }
+                }
+                if (plcBlock is Siemens.Engineering.SW.Blocks.GlobalDB)
+                {
+                    n.ImageIndex = 5;
+                    Siemens.Engineering.SW.Blocks.GlobalDB db = (Siemens.Engineering.SW.Blocks.GlobalDB)plcBlock;
+                    if (db.ProgrammingLanguage == ProgrammingLanguage.F_DB)
+                    {
+                        n.BackColor = Color.Yellow;
+                    }
+                }
+
+                n.SelectedImageIndex = n.ImageIndex;
 
                 node.Nodes.Add(n);
             }
@@ -221,6 +261,7 @@ namespace CodeGeneratorOpenness
 
                 TreeNode n = new TreeNode(group.Name);
                 n.Tag = group;
+                n.ImageIndex = 1;
 
                 AddPlcBlocks(group, n);
                 node.Nodes.Add(n);
@@ -287,14 +328,14 @@ namespace CodeGeneratorOpenness
             // this is how the last write time should be formatted
             lastWriteTimeUtcFormatted = lastWriteTimeUtc.ToString(@"yyyy\/MM\/dd HH:mm:ss.fff");
 
-            Console.WriteLine("CRC _: " + convertedHash);
-            Console.WriteLine("Date : " + lastWriteTimeUtcFormatted);
+            //Console.WriteLine("CRC _: " + convertedHash);
+            //Console.WriteLine("Date : " + lastWriteTimeUtcFormatted);
 
             // we set the key in the registry to avoid the firewall each time
             try
             {
                 // first time we need to ack, then the key is present
-                RegistryKey rk = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Siemens\Automation\Openness\16.0\Whitelist\CodeGeneratorOpenness.exe\Entry", true);
+                RegistryKey rk = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Siemens\Automation\Openness\" + Program.Version + @"\Whitelist\CodeGeneratorOpenness.exe\Entry", true);
                 rk.SetValue("FileHash", convertedHash);
                 rk.SetValue("DateModified", lastWriteTimeUtcFormatted);
             }
@@ -432,6 +473,11 @@ namespace CodeGeneratorOpenness
                     IterateThroughDevices(project);
                 }
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            IterateThroughDevices(project);
         }
     }
 }

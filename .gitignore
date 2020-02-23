@@ -1,9 +1,5 @@
 CodeGeneratorOpenness/obj/*
 .vs/*
-CodeGeneratorOpenness/bin/Debug/Siemens.Engineering.dll
-CodeGeneratorOpenness/bin/Debug/Siemens.Engineering.Hmi.dll
-CodeGeneratorOpenness/bin/Debug/Siemens.Engineering.Hmi.xml
 CodeGeneratorOpenness/bin/Debug/CodeGeneratorOpenness.exe
 CodeGeneratorOpenness/bin/Debug/CodeGeneratorOpenness.exe.config
 CodeGeneratorOpenness/bin/Debug/CodeGeneratorOpenness.pdb
-CodeGeneratorOpenness/bin/Debug/Siemens.Engineering.xml

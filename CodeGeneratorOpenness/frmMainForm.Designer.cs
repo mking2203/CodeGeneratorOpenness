@@ -28,6 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMainForm));
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
@@ -39,13 +41,15 @@
             this.label3 = new System.Windows.Forms.Label();
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.ctxBlock = new System.Windows.Forms.ContextMenu();
-            this.mnuPersonDelete = new System.Windows.Forms.MenuItem();
+            this.mnuBlockDelete = new System.Windows.Forms.MenuItem();
             this.ctxGroup = new System.Windows.Forms.ContextMenu();
-            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.mbuGroupAdd = new System.Windows.Forms.MenuItem();
             this.menuItem3 = new System.Windows.Forms.MenuItem();
-            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.mnuGroupDelete = new System.Windows.Forms.MenuItem();
             this.ctxSoftware = new System.Windows.Forms.ContextMenu();
-            this.menuItem4 = new System.Windows.Forms.MenuItem();
+            this.mnuSofwareAdd = new System.Windows.Forms.MenuItem();
+            this.button5 = new System.Windows.Forms.Button();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
             // button1
@@ -133,8 +137,11 @@
             // 
             // treeView1
             // 
-            this.treeView1.Location = new System.Drawing.Point(365, 39);
+            this.treeView1.ImageIndex = 0;
+            this.treeView1.ImageList = this.imageList1;
+            this.treeView1.Location = new System.Drawing.Point(365, 23);
             this.treeView1.Name = "treeView1";
+            this.treeView1.SelectedImageIndex = 0;
             this.treeView1.Size = new System.Drawing.Size(442, 390);
             this.treeView1.TabIndex = 10;
             this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDown);
@@ -142,54 +149,76 @@
             // ctxBlock
             // 
             this.ctxBlock.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.mnuPersonDelete});
+            this.mnuBlockDelete});
             // 
-            // mnuPersonDelete
+            // mnuBlockDelete
             // 
-            this.mnuPersonDelete.Index = 0;
-            this.mnuPersonDelete.Text = "Delete block";
-            this.mnuPersonDelete.Click += new System.EventHandler(this.mnuBlockDelete_Click);
+            this.mnuBlockDelete.Index = 0;
+            this.mnuBlockDelete.Text = "Delete block";
+            this.mnuBlockDelete.Click += new System.EventHandler(this.mnuBlockDelete_Click);
             // 
             // ctxGroup
             // 
             this.ctxGroup.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem2,
+            this.mbuGroupAdd,
             this.menuItem3,
-            this.menuItem1});
+            this.mnuGroupDelete});
             // 
-            // menuItem2
+            // mbuGroupAdd
             // 
-            this.menuItem2.Index = 0;
-            this.menuItem2.Text = "Add group";
-            this.menuItem2.Click += new System.EventHandler(this.menuGroupAdd_Click);
+            this.mbuGroupAdd.Index = 0;
+            this.mbuGroupAdd.Text = "Add group";
+            this.mbuGroupAdd.Click += new System.EventHandler(this.menuGroupAdd_Click);
             // 
             // menuItem3
             // 
             this.menuItem3.Index = 1;
             this.menuItem3.Text = "-";
             // 
-            // menuItem1
+            // mnuGroupDelete
             // 
-            this.menuItem1.Index = 2;
-            this.menuItem1.Text = "Delete group";
-            this.menuItem1.Click += new System.EventHandler(this.menuGroupDelete_Click);
+            this.mnuGroupDelete.Index = 2;
+            this.mnuGroupDelete.Text = "Delete group";
+            this.mnuGroupDelete.Click += new System.EventHandler(this.menuGroupDelete_Click);
             // 
             // ctxSoftware
             // 
             this.ctxSoftware.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
-            this.menuItem4});
+            this.mnuSofwareAdd});
             // 
-            // menuItem4
+            // mnuSofwareAdd
             // 
-            this.menuItem4.Index = 0;
-            this.menuItem4.Text = "Add group";
-            this.menuItem4.Click += new System.EventHandler(this.menuSofwareAdd_Click);
+            this.mnuSofwareAdd.Index = 0;
+            this.mnuSofwareAdd.Text = "Add group";
+            this.mnuSofwareAdd.Click += new System.EventHandler(this.menuSofwareAdd_Click);
+            // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(365, 419);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(75, 23);
+            this.button5.TabIndex = 11;
+            this.button5.Text = "Reload";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "Document_16x.png");
+            this.imageList1.Images.SetKeyName(1, "FolderClosed_16x.png");
+            this.imageList1.Images.SetKeyName(2, "OB.png");
+            this.imageList1.Images.SetKeyName(3, "FB.png");
+            this.imageList1.Images.SetKeyName(4, "FC.png");
+            this.imageList1.Images.SetKeyName(5, "DB.png");
             // 
             // frmMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(819, 450);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.treeView1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button4);
@@ -225,13 +254,15 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TreeView treeView1;
         internal System.Windows.Forms.ContextMenu ctxBlock;
-        internal System.Windows.Forms.MenuItem mnuPersonDelete;
+        internal System.Windows.Forms.MenuItem mnuBlockDelete;
         internal System.Windows.Forms.ContextMenu ctxGroup;
-        internal System.Windows.Forms.MenuItem menuItem1;
-        private System.Windows.Forms.MenuItem menuItem2;
+        internal System.Windows.Forms.MenuItem mnuGroupDelete;
+        private System.Windows.Forms.MenuItem mbuGroupAdd;
         private System.Windows.Forms.MenuItem menuItem3;
         internal System.Windows.Forms.ContextMenu ctxSoftware;
-        internal System.Windows.Forms.MenuItem menuItem4;
+        internal System.Windows.Forms.MenuItem mnuSofwareAdd;
+        private System.Windows.Forms.Button button5;
+        private System.Windows.Forms.ImageList imageList1;
     }
 }
 
