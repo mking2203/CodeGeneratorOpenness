@@ -33,14 +33,14 @@ using System.Globalization;
 
 namespace CodeGeneratorOpenness
 {
-    public partial class MainForm : Form
+    public partial class frmMainForm : Form
     {
         // just a little lazzy
         public static TiaPortal tiaPortal = null;
         public static Project project = null;
         public static PlcSoftware software = null;
 
-        public MainForm()
+        public frmMainForm()
         {
             InitializeComponent();
 
@@ -134,12 +134,19 @@ namespace CodeGeneratorOpenness
 
         private void IterateThroughDevices(Project project)
         {
+            // no project is open
             if (project == null)
-            {
-                Console.WriteLine("Project cannot be null");
                 return;
-            }
+
+            // shop a form to indicate work
+            frmReadStructure read = new frmReadStructure();
+            read.Show();
+            Application.DoEvents();
+
             Console.WriteLine(String.Format("Iterate through {0} device(s)", project.Devices.Count));
+            listBox1.Items.Clear();
+            listBox2.Items.Clear();
+            treeView1.Nodes.Clear();
 
             // search through devices
             foreach (Device device in project.Devices)
@@ -160,24 +167,26 @@ namespace CodeGeneratorOpenness
                                 Console.WriteLine(String.Format("Found {0}", item.Name));
                                 listBox2.Items.Add(item.Name);
 
+                                // get the software container
                                 SoftwareContainer softwareContainer = ((IEngineeringServiceProvider)item).GetService<SoftwareContainer>();
                                 if (softwareContainer != null)
                                 {
                                     software = softwareContainer.Software as PlcSoftware;
                                     Console.WriteLine("Found : " + software.Name);
 
-                                    // start update
+                                    // start update treeview
                                     treeView1.BeginUpdate();
 
-                                    // root node
+                                    // add root node
                                     TreeNode root = new TreeNode(software.Name);
+                                    root.Tag = software;
                                     treeView1.Nodes.Add(root);
 
                                     AddPlcBlocks(software.BlockGroup, root);
 
                                     // end update
                                     treeView1.EndUpdate();
-                                    
+
                                     root.Expand();
                                 }
                             }
@@ -185,8 +194,14 @@ namespace CodeGeneratorOpenness
                     }
                 }
             }
+
+            // close form
+            read.Close();
+            read.Dispose();
+
         }
 
+        // add structure to treeview
         private void AddPlcBlocks(PlcBlockGroup plcGroup, TreeNode node)
         {
             // first add all plc blocks
@@ -196,6 +211,7 @@ namespace CodeGeneratorOpenness
 
                 TreeNode n = new TreeNode(plcBlock.Name);
                 n.Tag = plcBlock;
+
                 node.Nodes.Add(n);
             }
             // then add groups and search recursive
@@ -205,7 +221,7 @@ namespace CodeGeneratorOpenness
 
                 TreeNode n = new TreeNode(group.Name);
                 n.Tag = group;
-               
+
                 AddPlcBlocks(group, n);
                 node.Nodes.Add(n);
             }
@@ -250,10 +266,11 @@ namespace CodeGeneratorOpenness
                 languageSettings.EditingLanguage = supportedGermanLanguage;
                 languageSettings.ReferenceLanguage = supportedGermanLanguage;
 
-                
+
             }
         }
 
+        // calculation for firewall
         public void CalcHash()
         {
             // calc the hash for the file for the firwall settings
@@ -285,7 +302,7 @@ namespace CodeGeneratorOpenness
             { }
         }
 
-        // test area
+        // add a fc for testing
         private void button4_Click(object sender, EventArgs e)
         {
             if (software == null)
@@ -299,6 +316,122 @@ namespace CodeGeneratorOpenness
             FileInfo f = new FileInfo(fPath);
             software.BlockGroup.Blocks.Import(f, ImportOptions.Override);
 
+            IterateThroughDevices(project);
+
+        }
+
+        // moue click on treeview
+        private void treeView1_MouseDown(object sender, MouseEventArgs e)
+        {
+            // Make sure this is the right button.
+            if (e.Button != MouseButtons.Right) return;
+
+            // Select this node.
+            TreeNode node_here = treeView1.GetNodeAt(e.X, e.Y);
+            treeView1.SelectedNode = node_here;
+
+            // See if we got a node.
+            if (node_here == null) return;
+
+            // See what kind of object this is and
+            // display the appropriate popup menu.
+            if (node_here.Tag is PlcSoftware)
+            {
+                ctxSoftware.Show(treeView1, new Point(e.X, e.Y));
+            }
+            if (node_here.Tag is PlcBlockGroup)
+            {
+                ctxGroup.Show(treeView1, new Point(e.X, e.Y));
+            }
+            if (node_here.Tag is PlcBlock)
+            {
+                ctxBlock.Show(treeView1, new Point(e.X, e.Y));
+            }
+        }
+
+        // delete block
+        private void mnuBlockDelete_Click(object sender, EventArgs e)
+        {
+            PlcBlock block = (PlcBlock)treeView1.SelectedNode.Tag;
+
+            DialogResult dlg = MessageBox.Show("Do you really want to delete the block " + block.Name + "?", "Delete block", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dlg == DialogResult.Yes)
+            {
+                block.Delete();
+                IterateThroughDevices(project);
+            }
+        }
+
+        // delete group
+        private void menuGroupDelete_Click(object sender, EventArgs e)
+        {
+            PlcBlockGroup group = (PlcBlockGroup)treeView1.SelectedNode.Tag;
+
+            if (group.Blocks.Count > 0)
+            {
+                MessageBox.Show("The group " + group.Name + " has ^sub blocks!\nDelete this blocks first", "Delete group", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            if (group.Groups.Count > 0)
+            {
+                MessageBox.Show("The group " + group.Name + " has sub groups!\nDelete this groups first", "Delete group", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            DialogResult dlg = MessageBox.Show("Do you really want to delete the group " + group.Name + "?", "Delete block", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dlg == DialogResult.Yes)
+            {
+                // not implemented yet, there is no method to delete a group?    
+
+                // code from Tia Example is using invoke
+                var selectedProjectObject = treeView1.SelectedNode.Tag;
+                try
+                {
+                    var engineeringObject = selectedProjectObject as IEngineeringObject;
+                    engineeringObject?.Invoke("Delete", new Dictionary<Type, object>());
+                }
+                catch (EngineeringException)
+                {
+
+                }
+                IterateThroughDevices(project);
+            }
+        }
+
+        private void menuGroupAdd_Click(object sender, EventArgs e)
+        {
+            PlcBlockGroup group = (PlcBlockGroup)treeView1.SelectedNode.Tag;
+
+            string name = string.Empty;
+            DialogResult dlg = Input.InputBox("Enter new group name", "New group", ref name);
+
+            if (dlg == DialogResult.OK)
+            {
+                if (name != string.Empty)
+                {
+                    group.Groups.Create(name);
+                    IterateThroughDevices(project);
+                }
+            }
+        }
+
+        private void menuSofwareAdd_Click(object sender, EventArgs e)
+        {
+            PlcSoftware soft = (PlcSoftware)treeView1.SelectedNode.Tag;
+            PlcBlockGroup group = soft.BlockGroup;
+
+            string name = string.Empty;
+            DialogResult dlg = Input.InputBox("Enter new group name", "New group", ref name);
+
+            if (dlg == DialogResult.OK)
+            {
+                if (name != string.Empty)
+                {
+                    group.Groups.Create(name);
+                    IterateThroughDevices(project);
+                }
+            }
         }
     }
 }

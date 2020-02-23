@@ -1,6 +1,6 @@
 ﻿namespace CodeGeneratorOpenness
 {
-    partial class MainForm
+    partial class frmMainForm
     {
         /// <summary>
         /// Erforderliche Designervariable.
@@ -38,6 +38,14 @@
             this.button4 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.ctxBlock = new System.Windows.Forms.ContextMenu();
+            this.mnuPersonDelete = new System.Windows.Forms.MenuItem();
+            this.ctxGroup = new System.Windows.Forms.ContextMenu();
+            this.menuItem2 = new System.Windows.Forms.MenuItem();
+            this.menuItem3 = new System.Windows.Forms.MenuItem();
+            this.menuItem1 = new System.Windows.Forms.MenuItem();
+            this.ctxSoftware = new System.Windows.Forms.ContextMenu();
+            this.menuItem4 = new System.Windows.Forms.MenuItem();
             this.SuspendLayout();
             // 
             // button1
@@ -65,7 +73,7 @@
             this.listBox1.FormattingEnabled = true;
             this.listBox1.Location = new System.Drawing.Point(162, 39);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(186, 147);
+            this.listBox1.Size = new System.Drawing.Size(186, 95);
             this.listBox1.TabIndex = 2;
             // 
             // label1
@@ -90,15 +98,15 @@
             // listBox2
             // 
             this.listBox2.FormattingEnabled = true;
-            this.listBox2.Location = new System.Drawing.Point(354, 39);
+            this.listBox2.Location = new System.Drawing.Point(162, 153);
             this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(186, 147);
+            this.listBox2.Size = new System.Drawing.Size(186, 95);
             this.listBox2.TabIndex = 5;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(354, 23);
+            this.label2.Location = new System.Drawing.Point(159, 137);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(29, 13);
             this.label2.TabIndex = 6;
@@ -117,7 +125,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(543, 23);
+            this.label3.Location = new System.Drawing.Point(362, 23);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(39, 13);
             this.label3.TabIndex = 9;
@@ -125,12 +133,59 @@
             // 
             // treeView1
             // 
-            this.treeView1.Location = new System.Drawing.Point(546, 39);
+            this.treeView1.Location = new System.Drawing.Point(365, 39);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(261, 390);
+            this.treeView1.Size = new System.Drawing.Size(442, 390);
             this.treeView1.TabIndex = 10;
+            this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDown);
             // 
-            // MainForm
+            // ctxBlock
+            // 
+            this.ctxBlock.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.mnuPersonDelete});
+            // 
+            // mnuPersonDelete
+            // 
+            this.mnuPersonDelete.Index = 0;
+            this.mnuPersonDelete.Text = "Delete block";
+            this.mnuPersonDelete.Click += new System.EventHandler(this.mnuBlockDelete_Click);
+            // 
+            // ctxGroup
+            // 
+            this.ctxGroup.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem2,
+            this.menuItem3,
+            this.menuItem1});
+            // 
+            // menuItem2
+            // 
+            this.menuItem2.Index = 0;
+            this.menuItem2.Text = "Add group";
+            this.menuItem2.Click += new System.EventHandler(this.menuGroupAdd_Click);
+            // 
+            // menuItem3
+            // 
+            this.menuItem3.Index = 1;
+            this.menuItem3.Text = "-";
+            // 
+            // menuItem1
+            // 
+            this.menuItem1.Index = 2;
+            this.menuItem1.Text = "Delete group";
+            this.menuItem1.Click += new System.EventHandler(this.menuGroupDelete_Click);
+            // 
+            // ctxSoftware
+            // 
+            this.ctxSoftware.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
+            this.menuItem4});
+            // 
+            // menuItem4
+            // 
+            this.menuItem4.Index = 0;
+            this.menuItem4.Text = "Add group";
+            this.menuItem4.Click += new System.EventHandler(this.menuSofwareAdd_Click);
+            // 
+            // frmMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -148,7 +203,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "MainForm";
+            this.Name = "frmMainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Code Gererator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -169,6 +224,14 @@
         private System.Windows.Forms.Button button4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TreeView treeView1;
+        internal System.Windows.Forms.ContextMenu ctxBlock;
+        internal System.Windows.Forms.MenuItem mnuPersonDelete;
+        internal System.Windows.Forms.ContextMenu ctxGroup;
+        internal System.Windows.Forms.MenuItem menuItem1;
+        private System.Windows.Forms.MenuItem menuItem2;
+        private System.Windows.Forms.MenuItem menuItem3;
+        internal System.Windows.Forms.ContextMenu ctxSoftware;
+        internal System.Windows.Forms.MenuItem menuItem4;
     }
 }
 
