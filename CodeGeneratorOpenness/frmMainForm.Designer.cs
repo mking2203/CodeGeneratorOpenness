@@ -40,6 +40,7 @@
             this.button4 = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.treeView1 = new System.Windows.Forms.TreeView();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.ctxBlock = new System.Windows.Forms.ContextMenu();
             this.mnuBlockDelete = new System.Windows.Forms.MenuItem();
             this.ctxGroup = new System.Windows.Forms.ContextMenu();
@@ -49,7 +50,6 @@
             this.ctxSoftware = new System.Windows.Forms.ContextMenu();
             this.mnuSofwareAdd = new System.Windows.Forms.MenuItem();
             this.button5 = new System.Windows.Forms.Button();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
             // 
             // button1
@@ -146,6 +146,18 @@
             this.treeView1.TabIndex = 10;
             this.treeView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDown);
             // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "Document_16x.png");
+            this.imageList1.Images.SetKeyName(1, "FolderClosed_16x.png");
+            this.imageList1.Images.SetKeyName(2, "OB.png");
+            this.imageList1.Images.SetKeyName(3, "FB.png");
+            this.imageList1.Images.SetKeyName(4, "FC.png");
+            this.imageList1.Images.SetKeyName(5, "DB.png");
+            this.imageList1.Images.SetKeyName(6, "safeDB.png");
+            // 
             // ctxBlock
             // 
             this.ctxBlock.MenuItems.AddRange(new System.Windows.Forms.MenuItem[] {
@@ -201,17 +213,6 @@
             this.button5.Text = "Reload";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "Document_16x.png");
-            this.imageList1.Images.SetKeyName(1, "FolderClosed_16x.png");
-            this.imageList1.Images.SetKeyName(2, "OB.png");
-            this.imageList1.Images.SetKeyName(3, "FB.png");
-            this.imageList1.Images.SetKeyName(4, "FC.png");
-            this.imageList1.Images.SetKeyName(5, "DB.png");
             // 
             // frmMainForm
             // 

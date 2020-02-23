@@ -238,6 +238,7 @@ namespace CodeGeneratorOpenness
                     if (db.ProgrammingLanguage == ProgrammingLanguage.F_DB)
                     {
                         n.BackColor = Color.Yellow;
+                        n.ImageIndex = 6;
                     }
                 }
                 if (plcBlock is Siemens.Engineering.SW.Blocks.GlobalDB)
@@ -247,6 +248,7 @@ namespace CodeGeneratorOpenness
                     if (db.ProgrammingLanguage == ProgrammingLanguage.F_DB)
                     {
                         n.BackColor = Color.Yellow;
+                        n.ImageIndex = 6;
                     }
                 }
 
