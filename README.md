@@ -16,13 +16,16 @@ Functions added:<br>
 
 -open TIA with interface (first instance or new instance)<br>
 -open project file via file dialog<br>
+-show folder structure<br>
 -close project<br>
 -add / change language for editing<br>
 -import a FC<br>
+<br>
+Screenshot:
+<br>
+<img src="https://raw.githubusercontent.com/mking2203/CodeGeneratorOpenness/master/CodeGenerator.png" alt="Code Generator">
 
-
-
-
-
+<br>
+<br>
 Some code for the Graph generation is "reversed engineered" since there is no description.
 
