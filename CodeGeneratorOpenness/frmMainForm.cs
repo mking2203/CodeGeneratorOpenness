@@ -509,5 +509,34 @@ namespace CodeGeneratorOpenness
         {
             Application.Exit();
         }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            if (project != null)
+            {
+                try
+                {
+                    string pa = Application.StartupPath + "\\Export.xml";
+                    project.ExportProjectTexts(new FileInfo(pa), new CultureInfo("de-DE"), new CultureInfo("en-GB"));
+                }
+                catch
+                { }
+            }
+        }
+
+        private void btnTest2_Click(object sender, EventArgs e)
+        {
+            if (project != null)
+            {
+                try
+                {
+                    string pa = Application.StartupPath + "\\Export.xml";
+                    project.ImportProjectTexts(new FileInfo(pa), false);
+                }
+                catch
+                { }
+            }
+
+        }
     }
 }

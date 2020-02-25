@@ -53,6 +53,8 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.txtProject = new System.Windows.Forms.ToolStripStatusLabel();
             this.btnExit = new System.Windows.Forms.Button();
+            this.btnTest = new System.Windows.Forms.Button();
+            this.btnTest2 = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -245,11 +247,33 @@
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(36, 279);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(97, 43);
+            this.btnTest.TabIndex = 14;
+            this.btnTest.Text = "Export Text";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
+            // btnTest2
+            // 
+            this.btnTest2.Location = new System.Drawing.Point(139, 279);
+            this.btnTest2.Name = "btnTest2";
+            this.btnTest2.Size = new System.Drawing.Size(97, 43);
+            this.btnTest2.TabIndex = 15;
+            this.btnTest2.Text = "Import Text";
+            this.btnTest2.UseVisualStyleBackColor = true;
+            this.btnTest2.Click += new System.EventHandler(this.btnTest2_Click);
+            // 
             // frmMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(819, 515);
+            this.Controls.Add(this.btnTest2);
+            this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnReload);
@@ -302,6 +326,8 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel txtProject;
         private System.Windows.Forms.Button btnExit;
+        private System.Windows.Forms.Button btnTest;
+        private System.Windows.Forms.Button btnTest2;
     }
 }
 
