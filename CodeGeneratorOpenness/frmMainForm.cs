@@ -516,7 +516,7 @@ namespace CodeGeneratorOpenness
             {
                 try
                 {
-                    string pa = Application.StartupPath + "\\Export.xml";
+                    string pa = Application.StartupPath + "\\Export.xlsx";
                     project.ExportProjectTexts(new FileInfo(pa), new CultureInfo("de-DE"), new CultureInfo("en-GB"));
                 }
                 catch
@@ -530,11 +530,32 @@ namespace CodeGeneratorOpenness
             {
                 try
                 {
-                    string pa = Application.StartupPath + "\\Export.xml";
-                    project.ImportProjectTexts(new FileInfo(pa), false);
+                    string pa = Application.StartupPath + "\\Export.xlsx";
+                    project.ImportProjectTexts(new FileInfo(pa), true);
                 }
-                catch
-                { }
+                catch (Exception ex)
+                {
+                }
+            }
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (software == null)
+                return;
+
+            try
+            {
+                string fPath = Application.StartupPath + "\\Step.xml";
+                FileInfo f = new FileInfo(fPath);
+
+                software.TypeGroup.Types.Import(f, ImportOptions.Override);
+                
+            }
+            catch (Exception ex)
+            {
+
             }
 
         }
