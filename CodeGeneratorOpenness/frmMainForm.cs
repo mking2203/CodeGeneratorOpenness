@@ -30,6 +30,7 @@ using System.IO;
 using System.Security.Cryptography;
 using Microsoft.Win32;
 using System.Globalization;
+using System.Xml;
 
 namespace CodeGeneratorOpenness
 {
@@ -547,15 +548,63 @@ namespace CodeGeneratorOpenness
 
             try
             {
+                // test file
                 string fPath = Application.StartupPath + "\\Step.xml";
                 FileInfo f = new FileInfo(fPath);
 
-                software.TypeGroup.Types.Import(f, ImportOptions.Override);
-                
+                // now load the xml document
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.Load(fPath);
+
+                // get version of the file
+                XmlNode bkm = xmlDoc.SelectSingleNode("//Document//Engineering");
+                string version = bkm.Attributes["version"].Value;
+
+                // check the correct type
+                XmlNode dataType = xmlDoc.SelectSingleNode("//Document//SW.Types.PlcStruct");
+                if (dataType != null)
+                {
+                    // get the name of the data type
+                    XmlNode nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Types.PlcStruct//AttributeList//Name");
+                    string name = nameDefination.InnerText;
+
+                    // check if the data type exists
+                    PlcType t = software.TypeGroup.Types.Find(name);
+                    if (t == null)
+                    {
+                        // import the file
+                        software.TypeGroup.Types.Import(f, ImportOptions.None);
+                    }
+                    else
+                    {
+                        // overwrite?
+                        DialogResult res = MessageBox.Show("Data type " + name + " exists already. Overwrite ?",
+                                                           "Overwrite",
+                                                           MessageBoxButtons.OKCancel,
+                                                           MessageBoxIcon.Question);
+                        if (res == DialogResult.OK)
+                        {
+                            // overwrite data type
+                            software.TypeGroup.Types.Import(f, ImportOptions.Override);
+                        }
+                    }
+                }
+                else
+                {
+                    // wrong data type
+                    MessageBox.Show("Wrong XML file (PlcStruct) ?",
+                                    "Wrong file",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Error);
+                }
+
             }
             catch (Exception ex)
             {
-
+                MessageBox.Show(ex.Message,
+                                "Exception",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
             }
 
         }
