@@ -188,6 +188,23 @@ namespace CodeGeneratorOpenness
 
                                     AddPlcBlocks(software.BlockGroup, root);
 
+                                    // add data types
+                                    TreeNode dataTypes = new TreeNode("Data types");
+                                    dataTypes.Tag = software.TypeGroup;
+                                    treeView1.Nodes.Add(dataTypes);
+
+                                    PlcTypeGroup group = software.TypeGroup;
+                                    foreach (PlcType ty in group.Types)
+                                    {
+                                        TreeNode n = new TreeNode(ty.Name);
+                                        n.Tag = ty;
+                                        n.ImageIndex = 9;
+                                        n.SelectedImageIndex = n.ImageIndex;
+
+                                        dataTypes.Nodes.Add(n);
+                                    }
+                                    dataTypes.Expand();
+
                                     // end update
                                     treeView1.EndUpdate();
 
@@ -414,18 +431,37 @@ namespace CodeGeneratorOpenness
             {
                 ctxBlock.Show(treeView1, new Point(e.X, e.Y));
             }
+            if (node_here.Tag is PlcStruct)
+            {
+                ctxBlock.Show(treeView1, new Point(e.X, e.Y));
+            }
         }
 
-        // delete block
+        // delete block / data type
         private void mnuBlockDelete_Click(object sender, EventArgs e)
         {
-            PlcBlock block = (PlcBlock)treeView1.SelectedNode.Tag;
-
-            DialogResult dlg = MessageBox.Show("Do you really want to delete the block " + block.Name + "?", "Delete block", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dlg == DialogResult.Yes)
+            if (treeView1.SelectedNode.Tag is PlcBlock)
             {
-                block.Delete();
-                IterateThroughDevices(project);
+                PlcBlock block = (PlcBlock)treeView1.SelectedNode.Tag;
+
+                DialogResult dlg = MessageBox.Show("Do you really want to delete the block " + block.Name + "?", "Delete block", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dlg == DialogResult.Yes)
+                {
+                    block.Delete();
+                    IterateThroughDevices(project);
+                }
+            }
+
+            if (treeView1.SelectedNode.Tag is PlcStruct)
+            {
+                PlcStruct block = (PlcStruct)treeView1.SelectedNode.Tag;
+
+                DialogResult dlg = MessageBox.Show("Do you really want to delete the data type " + block.Name + "?", "Delete data type", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (dlg == DialogResult.Yes)
+                {
+                    block.Delete();
+                    IterateThroughDevices(project);
+                }
             }
         }
 
@@ -549,53 +585,69 @@ namespace CodeGeneratorOpenness
             try
             {
                 // test file
-                string fPath = Application.StartupPath + "\\Step.xml";
-                FileInfo f = new FileInfo(fPath);
+                string fPath = string.Empty;
+                //string fPath = Application.StartupPath + "\\Step.xml";
 
-                // now load the xml document
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.Load(fPath);
-
-                // get version of the file
-                XmlNode bkm = xmlDoc.SelectSingleNode("//Document//Engineering");
-                string version = bkm.Attributes["version"].Value;
-
-                // check the correct type
-                XmlNode dataType = xmlDoc.SelectSingleNode("//Document//SW.Types.PlcStruct");
-                if (dataType != null)
+                using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
-                    // get the name of the data type
-                    XmlNode nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Types.PlcStruct//AttributeList//Name");
-                    string name = nameDefination.InnerText;
+                    openFileDialog.Filter = "XML files (*.xnl)|*.xml|All files (*.*)|*.*";
+                    openFileDialog.FilterIndex = 1;
+                    openFileDialog.RestoreDirectory = true;
 
-                    // check if the data type exists
-                    PlcType t = software.TypeGroup.Types.Find(name);
-                    if (t == null)
+                    if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        // import the file
-                        software.TypeGroup.Types.Import(f, ImportOptions.None);
-                    }
-                    else
-                    {
-                        // overwrite?
-                        DialogResult res = MessageBox.Show("Data type " + name + " exists already. Overwrite ?",
-                                                           "Overwrite",
-                                                           MessageBoxButtons.OKCancel,
-                                                           MessageBoxIcon.Question);
-                        if (res == DialogResult.OK)
+                        //Get the path of specified file
+                        fPath = openFileDialog.FileName;
+                        FileInfo f = new FileInfo(fPath);
+
+                        // now load the xml document
+                        XmlDocument xmlDoc = new XmlDocument();
+                        xmlDoc.Load(fPath);
+
+                        // get version of the file
+                        XmlNode bkm = xmlDoc.SelectSingleNode("//Document//Engineering");
+                        string version = bkm.Attributes["version"].Value;
+
+                        // check the correct type
+                        XmlNode dataType = xmlDoc.SelectSingleNode("//Document//SW.Types.PlcStruct");
+                        if (dataType != null)
                         {
-                            // overwrite data type
-                            software.TypeGroup.Types.Import(f, ImportOptions.Override);
+                            // get the name of the data type
+                            XmlNode nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Types.PlcStruct//AttributeList//Name");
+                            string name = nameDefination.InnerText;
+
+                            // check if the data type exists
+                            PlcType t = software.TypeGroup.Types.Find(name);
+                            if (t == null)
+                            {
+                                // import the file
+                                software.TypeGroup.Types.Import(f, ImportOptions.None);
+                                IterateThroughDevices(project);
+                            }
+                            else
+                            {
+                                // overwrite?
+                                DialogResult res = MessageBox.Show("Data type " + name + " exists already. Overwrite ?",
+                                                                   "Overwrite",
+                                                                   MessageBoxButtons.OKCancel,
+                                                                   MessageBoxIcon.Question);
+                                if (res == DialogResult.OK)
+                                {
+                                    // overwrite data type
+                                    software.TypeGroup.Types.Import(f, ImportOptions.Override);
+                                    IterateThroughDevices(project);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // wrong data type
+                            MessageBox.Show("Wrong XML file (PlcStruct) ?",
+                                            "Wrong file",
+                                            MessageBoxButtons.OK,
+                                            MessageBoxIcon.Error);
                         }
                     }
-                }
-                else
-                {
-                    // wrong data type
-                    MessageBox.Show("Wrong XML file (PlcStruct) ?",
-                                    "Wrong file",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Error);
                 }
 
             }

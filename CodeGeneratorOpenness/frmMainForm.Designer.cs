@@ -166,6 +166,7 @@
             this.imageList1.Images.SetKeyName(6, "safeDB.png");
             this.imageList1.Images.SetKeyName(7, "safeOB.png");
             this.imageList1.Images.SetKeyName(8, "safeFB.png");
+            this.imageList1.Images.SetKeyName(9, "DataType.png");
             // 
             // ctxBlock
             // 
@@ -175,7 +176,7 @@
             // mnuBlockDelete
             // 
             this.mnuBlockDelete.Index = 0;
-            this.mnuBlockDelete.Text = "Delete block";
+            this.mnuBlockDelete.Text = "Delete";
             this.mnuBlockDelete.Click += new System.EventHandler(this.mnuBlockDelete_Click);
             // 
             // ctxGroup
