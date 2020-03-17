@@ -83,6 +83,8 @@ namespace CodeGeneratorOpenness
                     Console.WriteLine("TIA Portal has started");
                 }
 
+                tiaPortal.Confirmation += TiaPortal_Confirmation;
+
                 // let's get the projects
                 ProjectComposition projects = tiaPortal.Projects;
 
@@ -136,6 +138,11 @@ namespace CodeGeneratorOpenness
             }
         }
 
+        private void TiaPortal_Confirmation(object sender, ConfirmationEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void IterateThroughDevices(Project project)
         {
             // no project is open
@@ -183,7 +190,7 @@ namespace CodeGeneratorOpenness
 
                                     // add root node
                                     TreeNode root = new TreeNode(software.Name);
-                                    root.Tag = software;
+                                    root.Tag = software.BlockGroup;
                                     treeView1.Nodes.Add(root);
 
                                     AddPlcBlocks(software.BlockGroup, root);
@@ -308,6 +315,8 @@ namespace CodeGeneratorOpenness
                 treeView1.Nodes.Clear();
 
                 txtProject.Text = "Project: ";
+
+                //project.Save();
                 project.Close();
 
                 software = null;
@@ -391,16 +400,74 @@ namespace CodeGeneratorOpenness
                     {
                         PlcBlockGroup group = (PlcBlockGroup)sel;
                         string fPath = Application.StartupPath + "\\TestFC1.xml";
+                        //string fPath = Application.StartupPath + "\\StepData.xml";
                         FileInfo f = new FileInfo(fPath);
-                        group.Blocks.Import(f, ImportOptions.Override);
 
-                        IterateThroughDevices(project);
+                        // now load the xml document
+                        XmlDocument xmlDoc = new XmlDocument();
+                        xmlDoc.Load(fPath);
+
+                        // get version of the file
+                        XmlNode bkm = xmlDoc.SelectSingleNode("//Document//Engineering");
+                        string version = bkm.Attributes["version"].Value;
+
+                        // check the correct type
+                        //XmlNode dataType = xmlDoc.SelectSingleNode("//Document//SW.Types.PlcStruct");
+                        //if (dataType != null)
+                        {
+                            // get the name of the data type
+                            XmlNode nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Blocks.GlobalDB//AttributeList//Name");
+                            if (nameDefination == null)
+                                nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Blocks.FC//AttributeList//Name");
+
+                            string name = nameDefination.InnerText;
+
+                            // check if the data type exists
+                            PlcBlock t = group.Blocks.Find(name);
+                            if (t == null)
+                            {
+                                // import the file
+                                group.Blocks.Import(f, ImportOptions.None);
+                                IterateThroughDevices(project);
+                            }
+                            else
+                            {
+                                // overwrite?
+                                DialogResult res = MessageBox.Show("Data block " + name + " exists already. Overwrite ?",
+                                                                   "Overwrite",
+                                                                   MessageBoxButtons.OKCancel,
+                                                                   MessageBoxIcon.Question);
+                                if (res == DialogResult.OK)
+                                {
+                                    // overwrite plc block
+                                    group.Blocks.Import(f, ImportOptions.Override);
+                                    IterateThroughDevices(project);
+                                }
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
-
+                        MessageBox.Show(ex.Message,
+                                "Exception",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error);
                     }
                 }
+                else
+                {
+                    MessageBox.Show("No group selected!",
+                                "No group",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Nothing is selected!",
+                            "Nothing selected",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Information);
             }
         }
 
@@ -416,6 +483,13 @@ namespace CodeGeneratorOpenness
 
             // See if we got a node.
             if (node_here == null) return;
+
+            // reset menu
+            ctxGroup.MenuItems[0].Enabled = true;
+            ctxGroup.MenuItems[2].Enabled = true;
+            //for the root node we can't delete the group
+            if (node_here.Parent == null)
+                ctxGroup.MenuItems[2].Enabled = false;
 
             // See what kind of object this is and
             // display the appropriate popup menu.
@@ -659,6 +733,90 @@ namespace CodeGeneratorOpenness
                                 MessageBoxIcon.Error);
             }
 
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // nothing selected            
+            if (treeView1.SelectedNode == null) return;
+            // only blocks and structs
+            if (!(treeView1.SelectedNode.Tag is PlcBlock) && !(treeView1.SelectedNode.Tag is PlcStruct))
+                return;
+
+            FolderBrowserDialog folderDialog = new FolderBrowserDialog();
+            folderDialog.Description = "Select export path";
+            folderDialog.SelectedPath = Application.StartupPath + "\\Export";
+
+            DialogResult res = folderDialog.ShowDialog();
+            // ok now save
+            if (res == DialogResult.OK)
+            {
+                try
+                {
+                    // for plcBlocks like OB,FB,FC
+                    if (treeView1.SelectedNode.Tag is PlcBlock)
+                    {
+                        PlcBlock block = (PlcBlock)treeView1.SelectedNode.Tag;
+
+                        string fPath = Application.StartupPath + "\\Export\\plcBlock_" + block.ProgrammingLanguage.ToString() + "_" + block.Name + ".xml";
+                        fPath = getNextFileName(fPath);
+
+                        FileInfo f = new FileInfo(fPath);
+                        block.Export(f, ExportOptions.None);
+
+                        MessageBox.Show("File " + f + " has beed exported",
+                                        "Export",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information);
+                    }
+
+                    // fpr data types
+                    if (treeView1.SelectedNode.Tag is PlcStruct)
+                    {
+                        PlcStruct block = (PlcStruct)treeView1.SelectedNode.Tag;
+
+                        string fPath = Application.StartupPath + "\\Export\\plcBlock_" + block.Name + ".xml";
+                        fPath = getNextFileName(fPath);
+
+                        FileInfo f = new FileInfo(fPath);
+                        block.Export(f, ExportOptions.None);
+
+                        MessageBox.Show("File " + f + " has beed exported",
+                                        "Export",
+                                        MessageBoxButtons.OK,
+                                        MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message,
+                            "Exception",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        //helper to generate unique name for the export
+        private string getNextFileName(string fileName)
+        {
+            string extension = Path.GetExtension(fileName);
+
+            int i = 0;
+            while (File.Exists(fileName))
+            {
+                if (i == 0)
+                    fileName = fileName.Replace(extension, "(" + ++i + ")" + extension);
+                else
+                    fileName = fileName.Replace("(" + i + ")" + extension, "(" + ++i + ")" + extension);
+            }
+            return fileName;
+        }
+
+        // generate default export folder
+        private void frmMainForm_Load(object sender, EventArgs e)
+        {
+            Directory.CreateDirectory(Application.StartupPath + "\\Export");
         }
     }
 }

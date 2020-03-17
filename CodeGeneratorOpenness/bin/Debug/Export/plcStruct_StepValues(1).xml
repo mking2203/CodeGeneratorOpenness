@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V16" />
+  <DocumentInfo>
+    <Created>2020-03-17T19:17:35.1213085Z</Created>
+    <ExportSetting>None</ExportSetting>
+    <InstalledProducts>
+      <Product>
+        <DisplayName>Totally Integrated Automation Portal</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>TIA Portal Version Control Interface</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </OptionPackage>
+      <OptionPackage>
+        <DisplayName>TIA Portal Openness</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>STEP 7 Professional</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>STEP 7 Safety</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>WinCC Advanced</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </Product>
+    </InstalledProducts>
+  </DocumentInfo>
+  <SW.Types.PlcStruct ID="0">
+    <AttributeList>
+      <Interface><Sections xmlns="http://www.siemens.com/automation/Openness/SW/Interface/v4">
+  <Section Name="None">
+    <Member Name="StepMode" Datatype="Int">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">0 = Automatic / 1 = SingleStep</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="SingleStep" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Step once</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="CurrentStep" Datatype="Int">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Actual step no</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="CurrentTime" Datatype="DInt">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Actual step time</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="CylcleState" Datatype="Int">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">1 = running</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="CycleAbort" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">abort cycle</MultiLanguageText>
+      </Comment>
+    </Member>
+  </Section>
+</Sections></Interface>
+      <Name>StepValues</Name>
+    </AttributeList>
+    <ObjectList>
+      <MultilingualText ID="1" CompositionName="Comment">
+        <ObjectList>
+          <MultilingualTextItem ID="2" CompositionName="Items">
+            <AttributeList>
+              <Culture>de-DE</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+        </ObjectList>
+      </MultilingualText>
+      <MultilingualText ID="3" CompositionName="Title">
+        <ObjectList>
+          <MultilingualTextItem ID="4" CompositionName="Items">
+            <AttributeList>
+              <Culture>de-DE</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+        </ObjectList>
+      </MultilingualText>
+    </ObjectList>
+  </SW.Types.PlcStruct>
+</Document>
