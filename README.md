@@ -15,10 +15,12 @@ Functions added:<br>
 
 -open TIA with interface (first instance or new instance)<br>
 -open project file via file dialog<br>
--show folder structure<br>
+-show folder structure software<br>
+-show data types<br>
 -close project<br>
 -add / change language for editing<br>
 -import a FC<br>
+-import a data type<br>
 <br>
 Screenshot:
 <br>
