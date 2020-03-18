@@ -200,16 +200,7 @@ namespace CodeGeneratorOpenness
                                     dataTypes.Tag = software.TypeGroup;
                                     treeView1.Nodes.Add(dataTypes);
 
-                                    PlcTypeGroup group = software.TypeGroup;
-                                    foreach (PlcType ty in group.Types)
-                                    {
-                                        TreeNode n = new TreeNode(ty.Name);
-                                        n.Tag = ty;
-                                        n.ImageIndex = 9;
-                                        n.SelectedImageIndex = n.ImageIndex;
-
-                                        dataTypes.Nodes.Add(n);
-                                    }
+                                    AddPlcTypes(software.TypeGroup, dataTypes);
                                     dataTypes.Expand();
 
                                     // end update
@@ -302,6 +293,32 @@ namespace CodeGeneratorOpenness
 
                 AddPlcBlocks(group, n);
                 node.Nodes.Add(n);
+            }
+        }
+
+        private void AddPlcTypes(PlcTypeGroup plcGroup, TreeNode node)
+        {
+            foreach (PlcType ty in plcGroup.Types)
+            {
+                TreeNode n = new TreeNode(ty.Name);
+                n.Tag = ty;
+                n.ImageIndex = 9;
+                n.SelectedImageIndex = n.ImageIndex;
+
+                node.Nodes.Add(n);
+            }
+
+            // then add groups and search recursive
+            foreach (PlcTypeGroup tGroup in plcGroup.Groups)
+            {
+                TreeNode n = new TreeNode(tGroup.Name);
+                n.Tag = tGroup;
+                n.ImageIndex = 1;
+                n.SelectedImageIndex = 1;
+
+                node.Nodes.Add(n);
+
+                AddPlcTypes(tGroup, n);
             }
         }
 
