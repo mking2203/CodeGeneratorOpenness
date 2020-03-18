@@ -54,6 +54,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="cFirewall.cs" />
+    <Compile Include="cFunctionGroups.cs" />
     <Compile Include="frmMainForm.cs">
       <SubType>Form</SubType>
     </Compile>

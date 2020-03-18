@@ -26,9 +26,8 @@ using Siemens.Engineering.SW.Tags;
 using Siemens.Engineering.SW.Types;
 using Siemens.Engineering.Compiler;
 using Siemens.Engineering.Library;
+
 using System.IO;
-using System.Security.Cryptography;
-using Microsoft.Win32;
 using System.Globalization;
 using System.Xml;
 
@@ -46,13 +45,21 @@ namespace CodeGeneratorOpenness
             InitializeComponent();
 
             // avoid firewall
-            CalcHash();
+            // HLKM\SOFTWARE\Siemens\Automation\Openness\
+            // set the rights for the key => everone to everything
+            cFirewall firewall = new cFirewall();
+            firewall.CalcHash();
+        }
+
+        private void frmMainForm_Load(object sender, EventArgs e)
+        {
+            // generate default export folder
+            Directory.CreateDirectory(Application.StartupPath + "\\Export");
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             // dispose objects
-
             software = null;
             project = null;
 
@@ -84,6 +91,7 @@ namespace CodeGeneratorOpenness
                 }
 
                 tiaPortal.Confirmation += TiaPortal_Confirmation;
+                tiaPortal.Notification += TiaPortal_Notification;
 
                 // let's get the projects
                 ProjectComposition projects = tiaPortal.Projects;
@@ -138,6 +146,11 @@ namespace CodeGeneratorOpenness
             }
         }
 
+        private void TiaPortal_Notification(object sender, NotificationEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
         private void TiaPortal_Confirmation(object sender, ConfirmationEventArgs e)
         {
             throw new NotImplementedException();
@@ -152,9 +165,10 @@ namespace CodeGeneratorOpenness
             // shop a form to indicate work
             frmReadStructure read = new frmReadStructure();
             read.Show();
+
             Application.DoEvents();
 
-            Console.WriteLine(String.Format("Iterate through {0} device(s)", project.Devices.Count));
+            //Console.WriteLine(String.Format("Iterate through {0} device(s)", project.Devices.Count));
             listBox1.Items.Clear();
             listBox2.Items.Clear();
             treeView1.Nodes.Clear();
@@ -167,7 +181,7 @@ namespace CodeGeneratorOpenness
                     // we search only for PLCs
                     if (device.TypeIdentifier == "System:Device.S71500")
                     {
-                        Console.WriteLine(String.Format("Found {0}", device.Name));
+                        //Console.WriteLine(String.Format("Found {0}", device.Name));
                         listBox1.Items.Add(device.Name);
 
                         // let's get the CPU
@@ -175,7 +189,7 @@ namespace CodeGeneratorOpenness
                         {
                             if (item.Classification.ToString() == "CPU")
                             {
-                                Console.WriteLine(String.Format("Found {0}", item.Name));
+                                //Console.WriteLine(String.Format("Found {0}", item.Name));
                                 listBox2.Items.Add(item.Name);
 
                                 // get the software container
@@ -183,7 +197,7 @@ namespace CodeGeneratorOpenness
                                 if (softwareContainer != null)
                                 {
                                     software = softwareContainer.Software as PlcSoftware;
-                                    Console.WriteLine("Found : " + software.Name);
+                                    //Console.WriteLine("Found : " + software.Name);
 
                                     // start update treeview
                                     treeView1.BeginUpdate();
@@ -193,14 +207,17 @@ namespace CodeGeneratorOpenness
                                     root.Tag = software.BlockGroup;
                                     treeView1.Nodes.Add(root);
 
-                                    AddPlcBlocks(software.BlockGroup, root);
+                                    cFunctionGroups func = new cFunctionGroups();
+                                    func.AddPlcBlocks(software.BlockGroup, root);
+                                    //AddPlcBlocks(software.BlockGroup, root);
 
                                     // add data types
                                     TreeNode dataTypes = new TreeNode("Data types");
                                     dataTypes.Tag = software.TypeGroup;
                                     treeView1.Nodes.Add(dataTypes);
 
-                                    AddPlcTypes(software.TypeGroup, dataTypes);
+                                    func.AddPlcTypes(software.TypeGroup, dataTypes);
+                                    //AddPlcTypes(software.TypeGroup, dataTypes);
                                     dataTypes.Expand();
 
                                     // end update
@@ -218,108 +235,6 @@ namespace CodeGeneratorOpenness
             read.Close();
             read.Dispose();
 
-        }
-
-        // add structure to treeview
-        private void AddPlcBlocks(PlcBlockGroup plcGroup, TreeNode node)
-        {
-            // first add all plc blocks
-            foreach (PlcBlock plcBlock in plcGroup.Blocks)
-            {
-                //Console.WriteLine("Found block : " + plcBlock.Name + " / " + plcBlock.ProgrammingLanguage);
-
-                TreeNode n = new TreeNode(plcBlock.Name);
-                n.Tag = plcBlock;
-                if (plcBlock is Siemens.Engineering.SW.Blocks.OB)
-                {
-                    n.ImageIndex = 2;
-                    Siemens.Engineering.SW.Blocks.OB ob = (Siemens.Engineering.SW.Blocks.OB)plcBlock;
-                    if (ob.SecondaryType.Contains("Safe"))
-                    {
-                        n.BackColor = Color.Yellow;
-                        n.ImageIndex = 7;
-                    }
-                }
-                if (plcBlock is Siemens.Engineering.SW.Blocks.FB)
-                {
-                    n.ImageIndex = 3;
-                    Siemens.Engineering.SW.Blocks.FB fb = (Siemens.Engineering.SW.Blocks.FB)plcBlock;
-                    if ((fb.ProgrammingLanguage == ProgrammingLanguage.F_LAD) ||
-                        (fb.ProgrammingLanguage == ProgrammingLanguage.F_FBD))
-                    {
-                        n.BackColor = Color.Yellow;
-                        n.ImageIndex = 8;
-                    }
-
-                }
-                if (plcBlock is Siemens.Engineering.SW.Blocks.FC)
-                    n.ImageIndex = 4;
-
-                if (plcBlock is Siemens.Engineering.SW.Blocks.InstanceDB)
-                {
-                    n.ImageIndex = 5;
-                    Siemens.Engineering.SW.Blocks.InstanceDB db = (Siemens.Engineering.SW.Blocks.InstanceDB)plcBlock;
-                    if (db.ProgrammingLanguage == ProgrammingLanguage.F_DB)
-                    {
-                        n.BackColor = Color.Yellow;
-                        n.ImageIndex = 6;
-                    }
-                }
-                if (plcBlock is Siemens.Engineering.SW.Blocks.GlobalDB)
-                {
-                    n.ImageIndex = 5;
-                    Siemens.Engineering.SW.Blocks.GlobalDB db = (Siemens.Engineering.SW.Blocks.GlobalDB)plcBlock;
-                    if (db.ProgrammingLanguage == ProgrammingLanguage.F_DB)
-                    {
-                        n.BackColor = Color.Yellow;
-                        n.ImageIndex = 6;
-                    }
-                }
-
-                n.SelectedImageIndex = n.ImageIndex;
-
-                node.Nodes.Add(n);
-            }
-
-            // then add groups and search recursive
-            foreach (PlcBlockGroup group in plcGroup.Groups)
-            {
-                //Console.WriteLine("Found group : " + group.Name);
-
-                TreeNode n = new TreeNode(group.Name);
-                n.Tag = group;
-                n.ImageIndex = 1;
-                n.SelectedImageIndex = 1;
-
-                AddPlcBlocks(group, n);
-                node.Nodes.Add(n);
-            }
-        }
-
-        private void AddPlcTypes(PlcTypeGroup plcGroup, TreeNode node)
-        {
-            foreach (PlcType ty in plcGroup.Types)
-            {
-                TreeNode n = new TreeNode(ty.Name);
-                n.Tag = ty;
-                n.ImageIndex = 9;
-                n.SelectedImageIndex = n.ImageIndex;
-
-                node.Nodes.Add(n);
-            }
-
-            // then add groups and search recursive
-            foreach (PlcTypeGroup tGroup in plcGroup.Groups)
-            {
-                TreeNode n = new TreeNode(tGroup.Name);
-                n.Tag = tGroup;
-                n.ImageIndex = 1;
-                n.SelectedImageIndex = 1;
-
-                node.Nodes.Add(n);
-
-                AddPlcTypes(tGroup, n);
-            }
         }
 
         // close project
@@ -368,38 +283,6 @@ namespace CodeGeneratorOpenness
 
 
             }
-        }
-
-        // calculation for firewall
-        public void CalcHash()
-        {
-            // calc the hash for the file for the firwall settings
-            string applicationPath = Application.StartupPath + "\\CodeGeneratorOpenness.exe";
-            string lastWriteTimeUtcFormatted = String.Empty;
-            DateTime lastWriteTimeUtc;
-            HashAlgorithm hashAlgorithm = SHA256.Create();
-            FileStream stream = File.OpenRead(applicationPath);
-            byte[] hash = hashAlgorithm.ComputeHash(stream);
-            // this is how the hash should appear in the .reg file
-            string convertedHash = Convert.ToBase64String(hash);
-            FileInfo fileInfo = new FileInfo(applicationPath);
-            lastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
-            // this is how the last write time should be formatted
-            lastWriteTimeUtcFormatted = lastWriteTimeUtc.ToString(@"yyyy\/MM\/dd HH:mm:ss.fff");
-
-            //Console.WriteLine("CRC _: " + convertedHash);
-            //Console.WriteLine("Date : " + lastWriteTimeUtcFormatted);
-
-            // we set the key in the registry to avoid the firewall each time
-            try
-            {
-                // first time we need to ack, then the key is present
-                RegistryKey rk = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Siemens\Automation\Openness\" + Program.Version + @"\Whitelist\CodeGeneratorOpenness.exe\Entry", true);
-                rk.SetValue("FileHash", convertedHash);
-                rk.SetValue("DateModified", lastWriteTimeUtcFormatted);
-            }
-            catch
-            { }
         }
 
         // add a fc for testing
@@ -830,10 +713,18 @@ namespace CodeGeneratorOpenness
             return fileName;
         }
 
-        // generate default export folder
-        private void frmMainForm_Load(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e)
         {
-            Directory.CreateDirectory(Application.StartupPath + "\\Export");
+            cFunctionGroups func = new cFunctionGroups();
+            List<PlcBlock> list = new List<PlcBlock>();
+            //list = getAllBlocks(software.BlockGroup, list);
+
+            List<PlcType> list2 = new List<PlcType>();
+            //list2 = getAllDataTypes(software.TypeGroup, list2);
+
+            List<string> list3 = new List<string>();
+            list3 = func.GetAllBlocksNames(software.BlockGroup, list3);
         }
+
     }
 }

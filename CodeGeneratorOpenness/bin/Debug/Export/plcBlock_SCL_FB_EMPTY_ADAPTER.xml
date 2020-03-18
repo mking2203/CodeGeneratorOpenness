@@ -1,0 +1,902 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Document>
+  <Engineering version="V16" />
+  <DocumentInfo>
+    <Created>2020-03-18T18:56:42.176653Z</Created>
+    <ExportSetting>None</ExportSetting>
+    <InstalledProducts>
+      <Product>
+        <DisplayName>Totally Integrated Automation Portal</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>TIA Portal Version Control Interface</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </OptionPackage>
+      <OptionPackage>
+        <DisplayName>TIA Portal Openness</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>STEP 7 Professional</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </Product>
+      <OptionPackage>
+        <DisplayName>STEP 7 Safety</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </OptionPackage>
+      <Product>
+        <DisplayName>WinCC Advanced</DisplayName>
+        <DisplayVersion>V16</DisplayVersion>
+      </Product>
+    </InstalledProducts>
+  </DocumentInfo>
+  <SW.Blocks.FB ID="0">
+    <AttributeList>
+      <AutoNumber>false</AutoNumber>
+      <Interface><Sections xmlns="http://www.siemens.com/automation/Openness/SW/Interface/v4">
+  <Section Name="Input">
+    <Member Name="I_Start" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Start manuell // start manual</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="I_ReleaseStart" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Freigabe start // release start</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="I_ReqAbort" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Anforderung Abbruch // request abort</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="I_WaitTimeRelieve" Datatype="Time">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Wartezeit Entlasten // Waiting time relieve</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="I_WaitTimeEmptying" Datatype="Time">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Wartezeit Entleeren // Waiting Time emptying</MultiLanguageText>
+      </Comment>
+    </Member>
+  </Section>
+  <Section Name="Output">
+    <Member Name="O_InitalState" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Grundstellung // inital state</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="O_Relieve" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Entlasten // relieve</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="O_Emptying" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Entleeren // emptying</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="O_WaitForOperator" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Warten auf Benutzer // wait for operator</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="O_EmptyingActive" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Entleeren aktiv // emptying active</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="O_ActualStep" Datatype="Int">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Aktueller Schritt // actual step</MultiLanguageText>
+      </Comment>
+    </Member>
+  </Section>
+  <Section Name="InOut" />
+  <Section Name="Static">
+    <Member Name="ActualStep" Datatype="Int">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Aktueller Schritt // actual step</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="WaitTimeRelieve" Datatype="TON_TIME" Version="1.0"><AttributeList><BooleanAttribute Name="SetPoint" SystemDefined="true">true</BooleanAttribute></AttributeList><Comment><MultiLanguageText Lang="de-DE">Wartezeit Entlasten // Waiting time relieve</MultiLanguageText></Comment></Member>
+    <Member Name="WaitTimeEmptying" Datatype="TON_TIME" Version="1.0"><AttributeList><BooleanAttribute Name="SetPoint" SystemDefined="true">true</BooleanAttribute></AttributeList><Comment><MultiLanguageText Lang="de-DE">Wartezeit Entleeren // waiting time emptying</MultiLanguageText></Comment></Member>
+  </Section>
+  <Section Name="Temp">
+    <Member Name="Tmp_WaitTimeRelieve" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Wartezeit Entlasten // Waiting time relieve</MultiLanguageText>
+      </Comment>
+    </Member>
+    <Member Name="Tmp_WaitTimeEmptying" Datatype="Bool">
+      <Comment>
+        <MultiLanguageText Lang="de-DE">Wartezeit Entleeren// waiting time emptying</MultiLanguageText>
+      </Comment>
+    </Member>
+  </Section>
+  <Section Name="Constant" />
+</Sections></Interface>
+      <MemoryLayout>Optimized</MemoryLayout>
+      <MemoryReserve>100</MemoryReserve>
+      <Name>FB_EMPTY_ADAPTER</Name>
+      <Number>461</Number>
+      <ProgrammingLanguage>SCL</ProgrammingLanguage>
+      <SetENOAutomatically>false</SetENOAutomatically>
+    </AttributeList>
+    <ObjectList>
+      <MultilingualText ID="1" CompositionName="Comment">
+        <ObjectList>
+          <MultilingualTextItem ID="2" CompositionName="Items">
+            <AttributeList>
+              <Culture>de-DE</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+          <MultilingualTextItem ID="3" CompositionName="Items">
+            <AttributeList>
+              <Culture>en-GB</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+          <MultilingualTextItem ID="4" CompositionName="Items">
+            <AttributeList>
+              <Culture>zh-CN</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+        </ObjectList>
+      </MultilingualText>
+      <SW.Blocks.CompileUnit ID="5" CompositionName="CompileUnits">
+        <AttributeList>
+          <NetworkSource><StructuredText xmlns="http://www.siemens.com/automation/Openness/SW/NetworkSource/StructuredText/v3">
+  <LineComment UId="21">
+    <Text UId="22"> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++</Text>
+  </LineComment>
+  <NewLine UId="23" />
+  <LineComment UId="24">
+    <Text UId="25"> FB x460 SAT Standard Baustein // SAT standard function block</Text>
+  </LineComment>
+  <NewLine UId="26" />
+  <LineComment UId="27">
+    <Text UId="28"> Erstellt / created: 03.01.2018 CSS  </Text>
+  </LineComment>
+  <NewLine UId="29" />
+  <LineComment UId="30">
+    <Text UId="31"> Version / version: 0.1</Text>
+  </LineComment>
+  <NewLine UId="32" />
+  <LineComment UId="33">
+    <Text UId="34"> Geändert modification: </Text>
+  </LineComment>
+  <NewLine UId="35" />
+  <LineComment UId="36">
+    <Text UId="37"> </Text>
+  </LineComment>
+  <NewLine UId="38" />
+  <LineComment UId="39">
+    <Text UId="40"> Funktion:</Text>
+  </LineComment>
+  <NewLine UId="41" />
+  <LineComment UId="42">
+    <Text UId="43"> Der Baustein steuert das Entleeren eines Adapters/Füllschlauchs.</Text>
+  </LineComment>
+  <NewLine UId="44" />
+  <LineComment UId="45">
+    <Text UId="46"> </Text>
+  </LineComment>
+  <NewLine UId="47" />
+  <LineComment UId="48">
+    <Text UId="49"> Function:</Text>
+  </LineComment>
+  <NewLine UId="50" />
+  <LineComment UId="51">
+    <Text UId="52"> This function block controls the emptying of a adapter/hose</Text>
+  </LineComment>
+  <NewLine UId="53" />
+  <LineComment UId="54">
+    <Text UId="55"> By the input config the function block switches between the brake / cooler</Text>
+  </LineComment>
+  <NewLine UId="56" />
+  <LineComment UId="57">
+    <Text UId="58"> and scr mode.</Text>
+  </LineComment>
+  <NewLine UId="59" />
+  <LineComment UId="60">
+    <Text UId="61"> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ </Text>
+  </LineComment>
+  <NewLine UId="62" />
+  <LineComment UId="63">
+    <Text UId="64"> ----------------------------------------------------------------------------------</Text>
+  </LineComment>
+  <NewLine UId="65" />
+  <LineComment UId="66">
+    <Text UId="67"> Zustände // states:</Text>
+  </LineComment>
+  <NewLine UId="68" />
+  <LineComment UId="69">
+    <Text UId="70"> 0: Grundstellung // inital state</Text>
+  </LineComment>
+  <NewLine UId="71" />
+  <LineComment UId="72">
+    <Text UId="73"> 1: Entlasten // relieve</Text>
+  </LineComment>
+  <NewLine UId="74" />
+  <LineComment UId="75">
+    <Text UId="76"> 2: Schlauch/Adapter entleeren // emptying hose/adapter </Text>
+  </LineComment>
+  <NewLine UId="77" />
+  <LineComment UId="78">
+    <Text UId="79"> 3: Warten auf Benutzer // wait for operator </Text>
+  </LineComment>
+  <NewLine UId="80" />
+  <LineComment UId="81">
+    <Text UId="82"> ----------------------------------------------------------------------------------</Text>
+  </LineComment>
+  <NewLine UId="83" />
+  <LineComment UId="84">
+    <Text UId="85"> </Text>
+  </LineComment>
+  <NewLine UId="86" />
+  <LineComment UId="87">
+    <Text UId="88"> Wartezeiten // waiting time</Text>
+  </LineComment>
+  <NewLine UId="89" />
+  <Access Scope="LocalVariable" UId="90">
+    <Symbol UId="91">
+      <Component Name="WaitTimeRelieve" UId="92" />
+    </Symbol>
+  </Access>
+  <Access Scope="Call" UId="93">
+    <Instruction UId="94">
+      <Token Text="(" UId="95" />
+      <Parameter Name="IN" UId="96">
+        <Blank UId="97" />
+        <Token Text=":=" UId="98" />
+        <Blank UId="99" />
+        <Access Scope="LocalVariable" UId="100">
+          <Symbol UId="101">
+            <Component Name="ActualStep" UId="102" />
+          </Symbol>
+        </Access>
+        <Blank UId="103" />
+        <Token Text="=" UId="104" />
+        <Blank UId="105" />
+        <Access Scope="LiteralConstant" UId="106">
+          <Constant UId="107">
+            <ConstantValue UId="109">1</ConstantValue>
+          </Constant>
+        </Access>
+      </Parameter>
+      <Token Text="," UId="110" />
+      <NewLine UId="111" />
+      <Blank Num="21" UId="112" />
+      <Parameter Name="PT" UId="113">
+        <Blank UId="114" />
+        <Token Text=":=" UId="115" />
+        <Blank UId="116" />
+        <Access Scope="LocalVariable" UId="117">
+          <Symbol UId="118">
+            <Component Name="I_WaitTimeRelieve" UId="119" />
+          </Symbol>
+        </Access>
+      </Parameter>
+      <Token Text="," UId="120" />
+      <NewLine UId="121" />
+      <Blank Num="21" UId="122" />
+      <Parameter Name="Q" UId="123">
+        <Blank UId="124" />
+        <Token Text="=&gt;" UId="125" />
+        <Blank UId="126" />
+        <Access Scope="LocalVariable" UId="127">
+          <Symbol UId="128">
+            <Component Name="Tmp_WaitTimeRelieve" UId="129" />
+          </Symbol>
+        </Access>
+      </Parameter>
+      <Token Text=")" UId="130" />
+    </Instruction>
+  </Access>
+  <Token Text=";" UId="131" />
+  <NewLine Num="2" UId="132" />
+  <Access Scope="LocalVariable" UId="133">
+    <Symbol UId="134">
+      <Component Name="WaitTimeEmptying" UId="135" />
+    </Symbol>
+  </Access>
+  <Access Scope="Call" UId="136">
+    <Instruction UId="137">
+      <Token Text="(" UId="138" />
+      <Parameter Name="IN" UId="139">
+        <Blank UId="140" />
+        <Token Text=":=" UId="141" />
+        <Blank UId="142" />
+        <Access Scope="LocalVariable" UId="143">
+          <Symbol UId="144">
+            <Component Name="ActualStep" UId="145" />
+          </Symbol>
+        </Access>
+        <Blank UId="146" />
+        <Token Text="=" UId="147" />
+        <Blank UId="148" />
+        <Access Scope="LiteralConstant" UId="149">
+          <Constant UId="150">
+            <ConstantValue UId="152">2</ConstantValue>
+          </Constant>
+        </Access>
+      </Parameter>
+      <Blank UId="153" />
+      <Token Text="," UId="154" />
+      <NewLine UId="155" />
+      <Blank Num="18" UId="156" />
+      <Parameter Name="PT" UId="157">
+        <Blank UId="158" />
+        <Token Text=":=" UId="159" />
+        <Blank UId="160" />
+        <Access Scope="LocalVariable" UId="161">
+          <Symbol UId="162">
+            <Component Name="I_WaitTimeEmptying" UId="163" />
+          </Symbol>
+        </Access>
+      </Parameter>
+      <Token Text="," UId="164" />
+      <NewLine UId="165" />
+      <Blank Num="18" UId="166" />
+      <Parameter Name="Q" UId="167">
+        <Blank UId="168" />
+        <Token Text="=&gt;" UId="169" />
+        <Blank UId="170" />
+        <Access Scope="LocalVariable" UId="171">
+          <Symbol UId="172">
+            <Component Name="Tmp_WaitTimeEmptying" UId="173" />
+          </Symbol>
+        </Access>
+      </Parameter>
+      <Token Text=")" UId="174" />
+    </Instruction>
+  </Access>
+  <Token Text=";" UId="175" />
+  <NewLine UId="176" />
+  <LineComment UId="177">
+    <Text UId="178"> </Text>
+  </LineComment>
+  <NewLine UId="179" />
+  <LineComment UId="180">
+    <Text UId="181"> Schritte // steps</Text>
+  </LineComment>
+  <NewLine UId="182" />
+  <Token Text="CASE" UId="183" />
+  <Blank UId="184" />
+  <Access Scope="LocalVariable" UId="185">
+    <Symbol UId="186">
+      <Component Name="ActualStep" UId="187" />
+    </Symbol>
+  </Access>
+  <Blank UId="188" />
+  <Token Text="OF" UId="189" />
+  <NewLine UId="190" />
+  <Blank Num="4" UId="191" />
+  <Access Scope="LiteralConstant" UId="192">
+    <Constant UId="193">
+      <ConstantValue UId="195">0</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=":" UId="196" />
+  <Blank UId="197" />
+  <LineComment UId="198">
+    <Text UId="199"> Grundstellung // inital state</Text>
+  </LineComment>
+  <NewLine UId="200" />
+  <Blank Num="8" UId="201" />
+  <Token Text="IF" UId="202" />
+  <Blank UId="203" />
+  <Token Text="(" UId="204" />
+  <Access Scope="LocalVariable" UId="205">
+    <Symbol UId="206">
+      <Component Name="I_ReleaseStart" UId="207" />
+    </Symbol>
+  </Access>
+  <Blank UId="208" />
+  <Token Text="AND" UId="209" />
+  <Blank UId="210" />
+  <Access Scope="LocalVariable" UId="211">
+    <Symbol UId="212">
+      <Component Name="I_Start" UId="213" />
+    </Symbol>
+  </Access>
+  <Token Text=")" UId="214" />
+  <Blank UId="215" />
+  <Token Text="THEN" UId="216" />
+  <NewLine UId="217" />
+  <Blank Num="12" UId="218" />
+  <Access Scope="LocalVariable" UId="219">
+    <Symbol UId="220">
+      <Component Name="ActualStep" UId="221" />
+    </Symbol>
+  </Access>
+  <Blank UId="222" />
+  <Token Text=":=" UId="223" />
+  <Blank UId="224" />
+  <Access Scope="LiteralConstant" UId="225">
+    <Constant UId="226">
+      <ConstantValue UId="228">1</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=";" UId="229" />
+  <NewLine UId="230" />
+  <Blank Num="8" UId="231" />
+  <Token Text="END_IF" UId="232" />
+  <Token Text=";" UId="233" />
+  <NewLine UId="234" />
+  <Blank Num="4" UId="235" />
+  <Access Scope="LiteralConstant" UId="236">
+    <Constant UId="237">
+      <ConstantValue UId="239">1</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=":" UId="240" />
+  <Blank UId="241" />
+  <LineComment UId="242">
+    <Text UId="243"> Entlasten // relieve</Text>
+  </LineComment>
+  <NewLine UId="244" />
+  <Blank Num="8" UId="245" />
+  <Token Text="IF" UId="246" />
+  <Blank UId="247" />
+  <Token Text="(" UId="248" />
+  <Access Scope="LocalVariable" UId="249">
+    <Symbol UId="250">
+      <Component Name="I_ReqAbort" UId="251" />
+    </Symbol>
+  </Access>
+  <Blank UId="252" />
+  <Token Text="=" UId="253" />
+  <Blank UId="254" />
+  <Access Scope="LiteralConstant" UId="255">
+    <Constant UId="256">
+      <ConstantValue UId="258">false</ConstantValue>
+    </Constant>
+  </Access>
+  <Blank UId="259" />
+  <Token Text="AND" UId="260" />
+  <Blank UId="261" />
+  <Access Scope="LocalVariable" UId="262">
+    <Symbol UId="263">
+      <Component Name="Tmp_WaitTimeRelieve" UId="264" />
+    </Symbol>
+  </Access>
+  <Token Text=")" UId="265" />
+  <Blank UId="266" />
+  <Token Text="THEN" UId="267" />
+  <NewLine UId="268" />
+  <Blank Num="12" UId="269" />
+  <Access Scope="LocalVariable" UId="270">
+    <Symbol UId="271">
+      <Component Name="ActualStep" UId="272" />
+    </Symbol>
+  </Access>
+  <Blank UId="273" />
+  <Token Text=":=" UId="274" />
+  <Blank UId="275" />
+  <Access Scope="LiteralConstant" UId="276">
+    <Constant UId="277">
+      <ConstantValue UId="279">2</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=";" UId="280" />
+  <NewLine UId="281" />
+  <Blank Num="8" UId="282" />
+  <Token Text="ELSIF" UId="283" />
+  <Blank UId="284" />
+  <Access Scope="LocalVariable" UId="285">
+    <Symbol UId="286">
+      <Component Name="I_ReqAbort" UId="287" />
+    </Symbol>
+  </Access>
+  <Blank UId="288" />
+  <Token Text="=" UId="289" />
+  <Blank UId="290" />
+  <Access Scope="LiteralConstant" UId="291">
+    <Constant UId="292">
+      <ConstantValue UId="294">true</ConstantValue>
+    </Constant>
+  </Access>
+  <Blank UId="295" />
+  <Token Text="THEN" UId="296" />
+  <NewLine UId="297" />
+  <Blank Num="12" UId="298" />
+  <Access Scope="LocalVariable" UId="299">
+    <Symbol UId="300">
+      <Component Name="ActualStep" UId="301" />
+    </Symbol>
+  </Access>
+  <Blank UId="302" />
+  <Token Text=":=" UId="303" />
+  <Blank UId="304" />
+  <Access Scope="LiteralConstant" UId="305">
+    <Constant UId="306">
+      <ConstantValue UId="308">0</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=";" UId="309" />
+  <NewLine UId="310" />
+  <Blank Num="8" UId="311" />
+  <Token Text="END_IF" UId="312" />
+  <Token Text=";" UId="313" />
+  <NewLine UId="314" />
+  <Blank Num="4" UId="315" />
+  <Access Scope="LiteralConstant" UId="316">
+    <Constant UId="317">
+      <ConstantValue UId="319">2</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=":" UId="320" />
+  <Blank UId="321" />
+  <LineComment UId="322">
+    <Text UId="323"> Entleeren // emptying</Text>
+  </LineComment>
+  <NewLine UId="324" />
+  <Blank Num="8" UId="325" />
+  <Token Text="IF" UId="326" />
+  <Blank UId="327" />
+  <Token Text="(" UId="328" />
+  <Access Scope="LocalVariable" UId="329">
+    <Symbol UId="330">
+      <Component Name="I_ReqAbort" UId="331" />
+    </Symbol>
+  </Access>
+  <Blank UId="332" />
+  <Token Text="=" UId="333" />
+  <Blank UId="334" />
+  <Access Scope="LiteralConstant" UId="335">
+    <Constant UId="336">
+      <ConstantValue UId="338">false</ConstantValue>
+    </Constant>
+  </Access>
+  <Blank UId="339" />
+  <Token Text="AND" UId="340" />
+  <Blank UId="341" />
+  <Access Scope="LocalVariable" UId="342">
+    <Symbol UId="343">
+      <Component Name="Tmp_WaitTimeEmptying" UId="344" />
+    </Symbol>
+  </Access>
+  <Token Text=")" UId="345" />
+  <Blank UId="346" />
+  <Token Text="THEN" UId="347" />
+  <NewLine UId="348" />
+  <Blank Num="12" UId="349" />
+  <Access Scope="LocalVariable" UId="350">
+    <Symbol UId="351">
+      <Component Name="ActualStep" UId="352" />
+    </Symbol>
+  </Access>
+  <Blank UId="353" />
+  <Token Text=":=" UId="354" />
+  <Blank UId="355" />
+  <Access Scope="LiteralConstant" UId="356">
+    <Constant UId="357">
+      <ConstantValue UId="359">3</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=";" UId="360" />
+  <NewLine UId="361" />
+  <Blank Num="8" UId="362" />
+  <Token Text="ELSIF" UId="363" />
+  <Blank UId="364" />
+  <Access Scope="LocalVariable" UId="365">
+    <Symbol UId="366">
+      <Component Name="I_ReqAbort" UId="367" />
+    </Symbol>
+  </Access>
+  <Blank UId="368" />
+  <Token Text="=" UId="369" />
+  <Blank UId="370" />
+  <Access Scope="LiteralConstant" UId="371">
+    <Constant UId="372">
+      <ConstantValue UId="374">true</ConstantValue>
+    </Constant>
+  </Access>
+  <Blank UId="375" />
+  <Token Text="THEN" UId="376" />
+  <NewLine UId="377" />
+  <Blank Num="12" UId="378" />
+  <Access Scope="LocalVariable" UId="379">
+    <Symbol UId="380">
+      <Component Name="ActualStep" UId="381" />
+    </Symbol>
+  </Access>
+  <Blank UId="382" />
+  <Token Text=":=" UId="383" />
+  <Blank UId="384" />
+  <Access Scope="LiteralConstant" UId="385">
+    <Constant UId="386">
+      <ConstantValue UId="388">0</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=";" UId="389" />
+  <NewLine UId="390" />
+  <Blank Num="8" UId="391" />
+  <Token Text="END_IF" UId="392" />
+  <Token Text=";" UId="393" />
+  <NewLine UId="394" />
+  <Blank Num="4" UId="395" />
+  <Access Scope="LiteralConstant" UId="396">
+    <Constant UId="397">
+      <ConstantValue UId="399">3</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=":" UId="400" />
+  <Blank UId="401" />
+  <LineComment UId="402">
+    <Text UId="403"> Warten auf Benutzer // wait for operator </Text>
+  </LineComment>
+  <NewLine UId="404" />
+  <Blank Num="8" UId="405" />
+  <Token Text="IF" UId="406" />
+  <Blank UId="407" />
+  <Token Text="(" UId="408" />
+  <Access Scope="LocalVariable" UId="409">
+    <Symbol UId="410">
+      <Component Name="I_ReqAbort" UId="411" />
+    </Symbol>
+  </Access>
+  <Blank UId="412" />
+  <Token Text="=" UId="413" />
+  <Blank UId="414" />
+  <Access Scope="LiteralConstant" UId="415">
+    <Constant UId="416">
+      <ConstantValue UId="418">TRUE</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=")" UId="419" />
+  <Blank UId="420" />
+  <Token Text="THEN" UId="421" />
+  <NewLine UId="422" />
+  <Blank Num="12" UId="423" />
+  <Access Scope="LocalVariable" UId="424">
+    <Symbol UId="425">
+      <Component Name="ActualStep" UId="426" />
+    </Symbol>
+  </Access>
+  <Blank UId="427" />
+  <Token Text=":=" UId="428" />
+  <Blank UId="429" />
+  <Access Scope="LiteralConstant" UId="430">
+    <Constant UId="431">
+      <ConstantValue UId="433">0</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=";" UId="434" />
+  <NewLine UId="435" />
+  <Blank Num="8" UId="436" />
+  <Token Text="END_IF" UId="437" />
+  <Token Text=";" UId="438" />
+  <NewLine UId="439" />
+  <Token Text="END_CASE" UId="440" />
+  <Token Text=";" UId="441" />
+  <NewLine Num="2" UId="442" />
+  <LineComment UId="443">
+    <Text UId="444"> Ausgabe Schritte // Output step information </Text>
+  </LineComment>
+  <NewLine UId="445" />
+  <Access Scope="LocalVariable" UId="446">
+    <Symbol UId="447">
+      <Component Name="O_ActualStep" UId="448" />
+    </Symbol>
+  </Access>
+  <Blank UId="449" />
+  <Token Text=":=" UId="450" />
+  <Blank UId="451" />
+  <Access Scope="LocalVariable" UId="452">
+    <Symbol UId="453">
+      <Component Name="ActualStep" UId="454" />
+    </Symbol>
+  </Access>
+  <Token Text=";" UId="455" />
+  <NewLine UId="456" />
+  <Access Scope="LocalVariable" UId="457">
+    <Symbol UId="458">
+      <Component Name="O_EmptyingActive" UId="459" />
+    </Symbol>
+  </Access>
+  <Blank UId="460" />
+  <Token Text=":=" UId="461" />
+  <Blank UId="462" />
+  <Token Text="(" UId="463" />
+  <Access Scope="LocalVariable" UId="464">
+    <Symbol UId="465">
+      <Component Name="ActualStep" UId="466" />
+    </Symbol>
+  </Access>
+  <Blank UId="467" />
+  <Token Text="&gt;" UId="468" />
+  <Blank UId="469" />
+  <Access Scope="LiteralConstant" UId="470">
+    <Constant UId="471">
+      <ConstantValue UId="473">0</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=")" UId="474" />
+  <Token Text=";" UId="475" />
+  <NewLine UId="476" />
+  <LineComment UId="477">
+    <Text UId="478"> </Text>
+  </LineComment>
+  <NewLine UId="479" />
+  <Access Scope="LocalVariable" UId="480">
+    <Symbol UId="481">
+      <Component Name="O_InitalState" UId="482" />
+    </Symbol>
+  </Access>
+  <Blank UId="483" />
+  <Token Text=":=" UId="484" />
+  <Blank UId="485" />
+  <Token Text="(" UId="486" />
+  <Access Scope="LocalVariable" UId="487">
+    <Symbol UId="488">
+      <Component Name="ActualStep" UId="489" />
+    </Symbol>
+  </Access>
+  <Blank UId="490" />
+  <Token Text="=" UId="491" />
+  <Blank UId="492" />
+  <Access Scope="LiteralConstant" UId="493">
+    <Constant UId="494">
+      <ConstantValue UId="496">0</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=")" UId="497" />
+  <Token Text=";" UId="498" />
+  <NewLine UId="499" />
+  <Access Scope="LocalVariable" UId="500">
+    <Symbol UId="501">
+      <Component Name="O_Relieve" UId="502" />
+    </Symbol>
+  </Access>
+  <Blank UId="503" />
+  <Token Text=":=" UId="504" />
+  <Blank UId="505" />
+  <Token Text="(" UId="506" />
+  <Access Scope="LocalVariable" UId="507">
+    <Symbol UId="508">
+      <Component Name="ActualStep" UId="509" />
+    </Symbol>
+  </Access>
+  <Blank UId="510" />
+  <Token Text="=" UId="511" />
+  <Blank UId="512" />
+  <Access Scope="LiteralConstant" UId="513">
+    <Constant UId="514">
+      <ConstantValue UId="516">1</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=")" UId="517" />
+  <Token Text=";" UId="518" />
+  <NewLine UId="519" />
+  <Access Scope="LocalVariable" UId="520">
+    <Symbol UId="521">
+      <Component Name="O_Emptying" UId="522" />
+    </Symbol>
+  </Access>
+  <Blank UId="523" />
+  <Token Text=":=" UId="524" />
+  <Blank UId="525" />
+  <Token Text="(" UId="526" />
+  <Access Scope="LocalVariable" UId="527">
+    <Symbol UId="528">
+      <Component Name="ActualStep" UId="529" />
+    </Symbol>
+  </Access>
+  <Blank UId="530" />
+  <Token Text="=" UId="531" />
+  <Blank UId="532" />
+  <Access Scope="LiteralConstant" UId="533">
+    <Constant UId="534">
+      <ConstantValue UId="536">2</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=")" UId="537" />
+  <Token Text=";" UId="538" />
+  <NewLine UId="539" />
+  <Access Scope="LocalVariable" UId="540">
+    <Symbol UId="541">
+      <Component Name="O_WaitForOperator" UId="542" />
+    </Symbol>
+  </Access>
+  <Blank UId="543" />
+  <Token Text=":=" UId="544" />
+  <Blank UId="545" />
+  <Token Text="(" UId="546" />
+  <Access Scope="LocalVariable" UId="547">
+    <Symbol UId="548">
+      <Component Name="ActualStep" UId="549" />
+    </Symbol>
+  </Access>
+  <Blank UId="550" />
+  <Token Text="=" UId="551" />
+  <Blank UId="552" />
+  <Access Scope="LiteralConstant" UId="553">
+    <Constant UId="554">
+      <ConstantValue UId="556">3</ConstantValue>
+    </Constant>
+  </Access>
+  <Token Text=")" UId="557" />
+  <Token Text=";" UId="558" />
+  <NewLine Num="2" UId="559" />
+</StructuredText></NetworkSource>
+          <ProgrammingLanguage>SCL</ProgrammingLanguage>
+        </AttributeList>
+        <ObjectList>
+          <MultilingualText ID="6" CompositionName="Comment">
+            <ObjectList>
+              <MultilingualTextItem ID="7" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="8" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="9" CompositionName="Items">
+                <AttributeList>
+                  <Culture>zh-CN</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+          <MultilingualText ID="A" CompositionName="Title">
+            <ObjectList>
+              <MultilingualTextItem ID="B" CompositionName="Items">
+                <AttributeList>
+                  <Culture>de-DE</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="C" CompositionName="Items">
+                <AttributeList>
+                  <Culture>en-GB</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+              <MultilingualTextItem ID="D" CompositionName="Items">
+                <AttributeList>
+                  <Culture>zh-CN</Culture>
+                  <Text />
+                </AttributeList>
+              </MultilingualTextItem>
+            </ObjectList>
+          </MultilingualText>
+        </ObjectList>
+      </SW.Blocks.CompileUnit>
+      <MultilingualText ID="E" CompositionName="Title">
+        <ObjectList>
+          <MultilingualTextItem ID="F" CompositionName="Items">
+            <AttributeList>
+              <Culture>de-DE</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+          <MultilingualTextItem ID="10" CompositionName="Items">
+            <AttributeList>
+              <Culture>en-GB</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+          <MultilingualTextItem ID="11" CompositionName="Items">
+            <AttributeList>
+              <Culture>zh-CN</Culture>
+              <Text />
+            </AttributeList>
+          </MultilingualTextItem>
+        </ObjectList>
+      </MultilingualText>
+    </ObjectList>
+  </SW.Blocks.FB>
+</Document>
