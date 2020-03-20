@@ -55,8 +55,10 @@ namespace CodeGeneratorOpenness
 
         private void frmMainForm_Load(object sender, EventArgs e)
         {
-            // generate default export folder
+            // generate default folder
             Directory.CreateDirectory(Application.StartupPath + "\\Export");
+            Directory.CreateDirectory(Application.StartupPath + "\\Import");
+            Directory.CreateDirectory(Application.StartupPath + "\\Temp");
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -315,33 +317,61 @@ namespace CodeGeneratorOpenness
                         //XmlNode dataType = xmlDoc.SelectSingleNode("//Document//SW.Types.PlcStruct");
                         //if (dataType != null)
                         {
-                            // get the name of the data type
-                            XmlNode nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Blocks.GlobalDB//AttributeList//Name");
-                            if (nameDefination == null)
-                                nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Blocks.FC//AttributeList//Name");
+                            string blockType = string.Empty;
 
+                            XmlNode document = xmlDoc.SelectSingleNode("//Document");
+                            foreach (XmlNode node in document.ChildNodes)
+                            {
+                                if(node.Name.StartsWith("SW.Blocks."))
+                                {
+                                    blockType = node.Name.Substring(10);
+                                    Console.WriteLine(node.Name.Substring(10));
+                                }
+                            }
+
+                            // get the name of the data type
+                            XmlNode nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Blocks." + blockType + "//AttributeList//Name");
                             string name = nameDefination.InnerText;
 
                             // check if the data type exists
-                            PlcBlock t = group.Blocks.Find(name);
-                            if (t == null)
+                            bool exists = false;
+
+                            List<string> list = new List<string>();
+                            list = groups.GetAllDataTypesNames(software.TypeGroup, list);
+                            if (list.Contains(name)) exists = true;
+
+                            if (!exists)
                             {
-                                // import the file
-                                group.Blocks.Import(f, ImportOptions.None);
-                                IterateThroughDevices(project);
-                            }
-                            else
-                            {
-                                // overwrite?
-                                DialogResult res = MessageBox.Show("Data block " + name + " exists already. Overwrite ?",
-                                                                   "Overwrite",
-                                                                   MessageBoxButtons.OKCancel,
-                                                                   MessageBoxIcon.Question);
-                                if (res == DialogResult.OK)
+                                list = new List<string>();
+                                list = groups.GetAllBlocksNames(software.BlockGroup, list);
+                                if (list.Contains(name)) exists = true;
+
+                                if (!exists)
                                 {
-                                    // overwrite plc block
-                                    group.Blocks.Import(f, ImportOptions.Override);
+                                    // import the file
+                                    group.Blocks.Import(f, ImportOptions.None);
                                     IterateThroughDevices(project);
+                                }
+                                else
+                                {
+                                    // since we can't import with a different name we need to save a copy 
+                                    // more work needed to check if new name exist....
+                                    nameDefination.InnerText = "newABC";
+
+                                    xmlDoc.Save(Application.StartupPath + "\\Temp\\temp.xml");
+                                    f = new FileInfo(Application.StartupPath + "\\Temp\\temp.xml");
+
+                                    // overwrite?
+                                    DialogResult res = MessageBox.Show("Data block " + name + " exists already. Overwrite ?",
+                                                                       "Overwrite",
+                                                                       MessageBoxButtons.OKCancel,
+                                                                       MessageBoxIcon.Question);
+                                    if (res == DialogResult.OK)
+                                    {
+                                        // overwrite plc block
+                                        group.Blocks.Import(f, ImportOptions.Override);
+                                        IterateThroughDevices(project);
+                                    }
                                 }
                             }
                         }
