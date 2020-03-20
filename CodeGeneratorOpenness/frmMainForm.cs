@@ -40,6 +40,8 @@ namespace CodeGeneratorOpenness
         public static Project project = null;
         public static PlcSoftware software = null;
 
+        private cFunctionGroups groups = new cFunctionGroups();
+
         public frmMainForm()
         {
             InitializeComponent();
@@ -90,8 +92,8 @@ namespace CodeGeneratorOpenness
                     Console.WriteLine("TIA Portal has started");
                 }
 
-                tiaPortal.Confirmation += TiaPortal_Confirmation;
-                tiaPortal.Notification += TiaPortal_Notification;
+                //tiaPortal.Confirmation += TiaPortal_Confirmation;
+                //tiaPortal.Notification += TiaPortal_Notification;
 
                 // let's get the projects
                 ProjectComposition projects = tiaPortal.Projects;
@@ -280,8 +282,6 @@ namespace CodeGeneratorOpenness
                 // set edit languages
                 languageSettings.EditingLanguage = supportedGermanLanguage;
                 languageSettings.ReferenceLanguage = supportedGermanLanguage;
-
-
             }
         }
 
@@ -590,28 +590,46 @@ namespace CodeGeneratorOpenness
                             XmlNode nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Types.PlcStruct//AttributeList//Name");
                             string name = nameDefination.InnerText;
 
-                            // check if the data type exists
-                            PlcType t = software.TypeGroup.Types.Find(name);
-                            if (t == null)
+                            // check if the name exists
+                            bool exists = false;
+
+                            List<string> list = new List<string>();
+                            list = groups.GetAllBlocksNames(software.BlockGroup, list);
+                            if (list.Contains(name)) exists = true;
+
+                            if (!exists)
                             {
-                                // import the file
-                                software.TypeGroup.Types.Import(f, ImportOptions.None);
-                                IterateThroughDevices(project);
-                            }
-                            else
-                            {
-                                // overwrite?
-                                DialogResult res = MessageBox.Show("Data type " + name + " exists already. Overwrite ?",
-                                                                   "Overwrite",
-                                                                   MessageBoxButtons.OKCancel,
-                                                                   MessageBoxIcon.Question);
-                                if (res == DialogResult.OK)
+                                list = new List<string>();
+                                list = groups.GetAllDataTypesNames(software.TypeGroup, list);
+                                if (list.Contains(name)) exists = true;
+
+                                if (!exists)
                                 {
-                                    // overwrite data type
-                                    software.TypeGroup.Types.Import(f, ImportOptions.Override);
+                                    // import the file
+                                    software.TypeGroup.Types.Import(f, ImportOptions.None);
                                     IterateThroughDevices(project);
                                 }
+                                else
+                                {
+                                    // overwrite?
+                                    DialogResult res = MessageBox.Show("Data type " + name + " exists already. Overwrite ?",
+                                                                       "Overwrite",
+                                                                       MessageBoxButtons.OKCancel,
+                                                                       MessageBoxIcon.Question);
+                                    if (res == DialogResult.OK)
+                                    {
+                                        // overwrite data type
+                                        software.TypeGroup.Types.Import(f, ImportOptions.Override);
+                                        IterateThroughDevices(project);
+                                    }
+                                }
                             }
+                            else
+                                // plc block exist
+                                MessageBox.Show("PLC block with the name " + name + " exist!",
+                                                "Name exits",
+                                                MessageBoxButtons.OK,
+                                                MessageBoxIcon.Error);
                         }
                         else
                         {
@@ -623,7 +641,6 @@ namespace CodeGeneratorOpenness
                         }
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -715,15 +732,18 @@ namespace CodeGeneratorOpenness
 
         private void button3_Click(object sender, EventArgs e)
         {
-            cFunctionGroups func = new cFunctionGroups();
-            List<PlcBlock> list = new List<PlcBlock>();
-            //list = getAllBlocks(software.BlockGroup, list);
+            if (software != null)
+            {
+                cFunctionGroups func = new cFunctionGroups();
+                List<PlcBlock> list = new List<PlcBlock>();
+                //list = getAllBlocks(software.BlockGroup, list);
 
-            List<PlcType> list2 = new List<PlcType>();
-            //list2 = getAllDataTypes(software.TypeGroup, list2);
+                List<PlcType> list2 = new List<PlcType>();
+                //list2 = getAllDataTypes(software.TypeGroup, list2);
 
-            List<string> list3 = new List<string>();
-            list3 = func.GetAllBlocksNames(software.BlockGroup, list3);
+                List<string> list3 = new List<string>();
+                list3 = func.GetAllBlocksNames(software.BlockGroup, list3);
+            }
         }
 
     }

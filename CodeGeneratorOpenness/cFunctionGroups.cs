@@ -34,12 +34,15 @@ namespace CodeGeneratorOpenness
             // first add all plc blocks
             foreach (PlcBlock plcBlock in plcGroup.Blocks)
             {
-                TreeNode n = new TreeNode(plcBlock.Name);
-                n.Tag = plcBlock;
+                TreeNode n = null;
 
                 if (plcBlock is OB)
                 {
+                    n = new TreeNode(plcBlock.Name + " [OB" + plcBlock.Number.ToString() + "]");
+                    n.Tag = plcBlock;
+                    //n.ToolTipText = "Version " + plcBlock.HeaderVersion.ToString();
                     n.ImageIndex = 2;
+
                     OB ob = (OB)plcBlock;
                     if (ob.SecondaryType.Contains("Safe"))
                     {
@@ -49,7 +52,10 @@ namespace CodeGeneratorOpenness
                 }
                 else if (plcBlock is FB)
                 {
+                    n = new TreeNode(plcBlock.Name + " [FB" + plcBlock.Number.ToString() + "]");
+                    n.Tag = plcBlock;
                     n.ImageIndex = 3;
+
                     FB fb = (FB)plcBlock;
                     if ((fb.ProgrammingLanguage == ProgrammingLanguage.F_LAD) ||
                         (fb.ProgrammingLanguage == ProgrammingLanguage.F_FBD))
@@ -60,12 +66,18 @@ namespace CodeGeneratorOpenness
                 }
                 else if (plcBlock is FC)
                 {
+                    n = new TreeNode(plcBlock.Name + " [FC" + plcBlock.Number.ToString() + "]");
+                    n.Tag = plcBlock;
                     n.ImageIndex = 4;
                 }
                 else if (plcBlock is InstanceDB)
                 {
+                    n = new TreeNode(plcBlock.Name + " [DB" + plcBlock.Number.ToString() + "]");
+                    n.Tag = plcBlock;
                     n.ImageIndex = 5;
+
                     InstanceDB db = (InstanceDB)plcBlock;
+                    n.Name = db.Name + "[DB" + db.Number.ToString() + "]";
                     if (db.ProgrammingLanguage == ProgrammingLanguage.F_DB)
                     {
                         n.BackColor = Color.Yellow;
@@ -74,8 +86,12 @@ namespace CodeGeneratorOpenness
                 }
                 else if (plcBlock is GlobalDB)
                 {
+                    n = new TreeNode(plcBlock.Name + " [DB" + plcBlock.Number.ToString() + "]");
+                    n.Tag = plcBlock;
                     n.ImageIndex = 5;
+
                     GlobalDB db = (GlobalDB)plcBlock;
+                    n.Name = db.Name + "[FB" + db.Number.ToString() + "]";
                     if (db.ProgrammingLanguage == ProgrammingLanguage.F_DB)
                     {
                         n.BackColor = Color.Yellow;

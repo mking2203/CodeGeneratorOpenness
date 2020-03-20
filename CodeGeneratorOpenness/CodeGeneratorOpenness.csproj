@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>codeGenerator.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Siemens.Engineering">
       <HintPath>C:\Program Files\Siemens\Automation\Portal V16\PublicAPI\V16\Siemens.Engineering.dll</HintPath>
@@ -82,6 +85,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="frmReadStructure.resx">
       <DependentUpon>frmReadStructure.cs</DependentUpon>
@@ -98,6 +102,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="codeGenerator.ico" />
+    <EmbeddedResource Include="Ressources\DataType.png" />
+    <EmbeddedResource Include="Ressources\safeDB.png" />
+    <EmbeddedResource Include="Ressources\safeFB.png" />
+    <EmbeddedResource Include="Ressources\safeOB.png" />
+    <EmbeddedResource Include="Ressources\DB.png" />
+    <EmbeddedResource Include="Ressources\FC.png" />
+    <EmbeddedResource Include="Ressources\FB.png" />
+    <EmbeddedResource Include="Ressources\OB.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
