@@ -29,6 +29,33 @@ namespace CodeGeneratorOpenness
 {
     class cFunctionGroups
     {
+        public void LoadTreeView(TreeView Tree, PlcSoftware Software)
+        {
+            Tree.Nodes.Clear();
+
+            // start update treeview
+            Tree.BeginUpdate();
+
+            // add root node
+            TreeNode root = new TreeNode(Software.Name);
+            root.Tag = Software.BlockGroup;
+            Tree.Nodes.Add(root);
+
+            AddPlcBlocks(Software.BlockGroup, root);
+
+            // add data types
+            TreeNode dataTypes = new TreeNode("Data types");
+            dataTypes.Tag = Software.TypeGroup;
+            Tree.Nodes.Add(dataTypes);
+
+            AddPlcTypes(Software.TypeGroup, dataTypes);
+            dataTypes.Expand();
+
+            // end update
+            Tree.EndUpdate();
+
+            root.Expand();
+        }
         public void AddPlcBlocks(PlcBlockGroup plcGroup, TreeNode node)
         {
             // first add all plc blocks
@@ -187,6 +214,20 @@ namespace CodeGeneratorOpenness
                 result = GetAllDataTypesNames(group, result);
             }
             return result;
+        }
+
+        // we need to enumerate through the tree since there is no function in the API?
+        public bool NameExists(string Name, PlcSoftware Software)
+        {
+            List<string> list = new List<string>();
+            list = GetAllBlocksNames(Software.BlockGroup, list);
+            if (list.Contains(Name)) return true;
+
+            list = new List<string>();
+            list = GetAllDataTypesNames(Software.TypeGroup, list);
+            if (list.Contains(Name)) return true;
+
+            return false;
         }
     }
 }
