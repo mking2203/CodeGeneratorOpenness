@@ -229,5 +229,15 @@ namespace CodeGeneratorOpenness
 
             return false;
         }
+
+        public bool GroupExists(string Name, PlcBlockGroup Group)
+        {
+            foreach (PlcBlockGroup g in Group.Groups)
+            {
+                if (g.Name.ToLower() == Name.ToLower()) return true;
+            }
+
+            return false;
+        }
     }
 }

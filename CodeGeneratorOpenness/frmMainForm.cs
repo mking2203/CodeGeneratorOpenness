@@ -61,7 +61,7 @@ namespace CodeGeneratorOpenness
             Directory.CreateDirectory(Application.StartupPath + "\\Temp");
         }
 
-        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmMainForm_Closing(object sender, FormClosingEventArgs e)
         {
             // dispose objects
             software = null;
@@ -160,7 +160,92 @@ namespace CodeGeneratorOpenness
                 languageSettings.ReferenceLanguage = supportedGermanLanguage;
             }
         }
-     
+
+        private void btnReload_Click(object sender, EventArgs e)
+        {
+            IterateThroughDevices(project);
+        }
+
+        private string GetNextFileName(string fileName)
+        {
+            //helper to generate unique name for the export
+            string extension = Path.GetExtension(fileName);
+
+            int i = 0;
+            while (File.Exists(fileName))
+            {
+                if (i == 0)
+                    fileName = fileName.Replace(extension, "(" + ++i + ")" + extension);
+                else
+                    fileName = fileName.Replace("(" + i + ")" + extension, "(" + ++i + ")" + extension);
+            }
+            return fileName;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (project != null)
+            {
+                if (project.IsModified)
+                    txtSaved.Text = "MODIFIED";
+                else
+                    txtSaved.Text = "is saved";
+            }
+            else
+                txtSaved.Text = "no project open";
+        }
+
+        private void SaveProject()
+        {
+            if (project != null)
+            {
+                if (project.IsModified)
+                {
+                    if (MessageYesNo("Do you want to save the changes?", "Save changes") == DialogResult.Yes)
+                        project.Save();
+                }
+            }
+        }
+
+        private void CompileProject()
+        {
+            if (software != null)
+            {
+                ICompilable compileService = software.GetService<ICompilable>();
+                CompilerResult result = compileService.Compile();
+
+                this.BringToFront();
+                Application.DoEvents();
+
+                // result messages is array
+                MessageOK("Result : " + result.State.ToString() + "\n" +
+                                "Errors: " + result.ErrorCount.ToString() + "\n" +
+                                "Warnings: " + result.WarningCount.ToString() + "\n",
+                                "Compiler");
+
+                IterateThroughDevices(project);
+            }
+        }
+
+        private void TiaPortal_Confirmation(object sender, ConfirmationEventArgs e)
+        {
+            //throw new NotImplementedException();
+        }
+
+        private void TiaPortal_Notification(object sender, NotificationEventArgs e)
+        {
+            if (e.Caption == "Export Completed")
+                e.IsHandled = true;
+
+            // maybe need some more work
+            if (e.Caption == "Import completed with warnings")
+                e.IsHandled = true;
+
+            //throw new NotImplementedException();
+        }
+
+        #region TreeView
+
         private void treeView1_MouseDown(object sender, MouseEventArgs e)
         {
             // moue click on treeview
@@ -201,7 +286,7 @@ namespace CodeGeneratorOpenness
                 ctxBlock.Show(treeView1, new Point(e.X, e.Y));
             }
         }
-        
+
         private void mnuBlockDelete_Click(object sender, EventArgs e)
         {
             // delete block / data type
@@ -209,27 +294,38 @@ namespace CodeGeneratorOpenness
             {
                 PlcBlock block = (PlcBlock)treeView1.SelectedNode.Tag;
 
-                DialogResult dlg = MessageBox.Show("Do you really want to delete the block " + block.Name + "?", "Delete block", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dlg == DialogResult.Yes)
+                if (MessageYesNo("Do you really want to delete the block " + block.Name + "?", "Delete block") == DialogResult.Yes)
                 {
-                    block.Delete();
-                    IterateThroughDevices(project);
+                    try
+                    {
+                        block.Delete();
+                        IterateThroughDevices(project);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageError(ex.Message, "Exception");
+                    }
                 }
             }
-
-            if (treeView1.SelectedNode.Tag is PlcStruct)
+            else if (treeView1.SelectedNode.Tag is PlcStruct)
             {
                 PlcStruct block = (PlcStruct)treeView1.SelectedNode.Tag;
 
-                DialogResult dlg = MessageBox.Show("Do you really want to delete the data type " + block.Name + "?", "Delete data type", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (dlg == DialogResult.Yes)
+                if (MessageYesNo("Do you really want to delete the data type " + block.Name + "?", "Delete data type") == DialogResult.Yes)
                 {
-                    block.Delete();
-                    IterateThroughDevices(project);
+                    try
+                    {
+                        block.Delete();
+                        IterateThroughDevices(project);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageError(ex.Message, "Exception");
+                    }
                 }
             }
         }
-  
+
         private void menuGroupDelete_Click(object sender, EventArgs e)
         {
             // delete group
@@ -237,18 +333,17 @@ namespace CodeGeneratorOpenness
 
             if (group.Blocks.Count > 0)
             {
-                MessageBox.Show("The group " + group.Name + " has ^sub blocks!\nDelete this blocks first", "Delete group", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageOK("The group " + group.Name + " has sub blocks!\nDelete this blocks first", "Delete group");
                 return;
             }
 
             if (group.Groups.Count > 0)
             {
-                MessageBox.Show("The group " + group.Name + " has sub groups!\nDelete this groups first", "Delete group", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageOK("The group " + group.Name + " has sub groups!\nDelete this groups first", "Delete group");
                 return;
             }
 
-            DialogResult dlg = MessageBox.Show("Do you really want to delete the group " + group.Name + "?", "Delete block", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (dlg == DialogResult.Yes)
+            if (MessageYesNo("Do you really want to delete the group " + group.Name + "?", "Delete block") == DialogResult.Yes)
             {
                 // not implemented yet, there is no method to delete a group?    
 
@@ -278,8 +373,21 @@ namespace CodeGeneratorOpenness
             {
                 if (name != string.Empty)
                 {
-                    group.Groups.Create(name);
-                    IterateThroughDevices(project);
+                    if (!groups.GroupExists(name, group))
+                    {
+                        try
+                        {
+                            group.Groups.Create(name);
+                            IterateThroughDevices(project);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageError(ex.Message, "Exception");
+                        }
+                    }
+                    else
+                        MessageError(name + " exist already", "Name exist already");
+
                 }
             }
         }
@@ -296,98 +404,29 @@ namespace CodeGeneratorOpenness
             {
                 if (name != string.Empty)
                 {
-                    group.Groups.Create(name);
-                    IterateThroughDevices(project);
+                    if (!groups.GroupExists(name, group))
+                    {
+                        try
+                        {
+                            group.Groups.Create(name);
+                            IterateThroughDevices(project);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageError(ex.Message, "Exception");
+                        }
+                    }
+                    else
+                        MessageError(name + " exist already", "Name exist already");
                 }
             }
         }
 
-        private void btnReload_Click(object sender, EventArgs e)
-        {
-            IterateThroughDevices(project);
-        }
-
-        private string getNextFileName(string fileName)
-        {
-            //helper to generate unique name for the export
-            string extension = Path.GetExtension(fileName);
-
-            int i = 0;
-            while (File.Exists(fileName))
-            {
-                if (i == 0)
-                    fileName = fileName.Replace(extension, "(" + ++i + ")" + extension);
-                else
-                    fileName = fileName.Replace("(" + i + ")" + extension, "(" + ++i + ")" + extension);
-            }
-            return fileName;
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            if (project != null)
-            {
-                if (project.IsModified)
-                    txtSaved.Text = "MODIFIED";
-                else
-                    txtSaved.Text = "is saved";
-            }
-            else
-                txtSaved.Text = "no project open";
-        }
-
-        private void saveProject()
-        {
-            if (project != null)
-            {
-                if (project.IsModified)
-                {
-                    if (messageYesNo("Do you want to save the changes?", "Save changes") == DialogResult.Yes)
-                        project.Save();
-                }
-            }
-        }
-
-        private void compileProject()
-        {
-            if (software != null)
-            {
-                ICompilable compileService = software.GetService<ICompilable>();
-                CompilerResult result = compileService.Compile();
-
-                this.BringToFront();
-                Application.DoEvents();
-
-                // result messages is array
-                messageOK("Result : " + result.State.ToString() + "\n" +
-                                "Errors: " + result.ErrorCount.ToString() + "\n" +
-                                "Warnings: " + result.WarningCount.ToString() + "\n",
-                                "Compiler");
-
-                IterateThroughDevices(project);
-            }
-        }
-
-        private void TiaPortal_Confirmation(object sender, ConfirmationEventArgs e)
-        {
-            //throw new NotImplementedException();
-        }
-
-        private void TiaPortal_Notification(object sender, NotificationEventArgs e)
-        {
-            if (e.Caption == "Export Completed")
-                e.IsHandled = true;
-
-            // maybe need some more work
-            if (e.Caption == "Import completed with warnings")
-                e.IsHandled = true;
-
-            //throw new NotImplementedException();
-        }
+        #endregion
 
         #region Dialog messageBox
 
-        private DialogResult messageYesNo(string Message, string Title)
+        private DialogResult MessageYesNo(string Message, string Title)
         {
             this.BringToFront();
             Application.DoEvents();
@@ -395,7 +434,7 @@ namespace CodeGeneratorOpenness
             return MessageBox.Show(Message, Title, MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
 
-        private DialogResult messageYesNoCancel(string Message, string Title)
+        private DialogResult MessageYesNoCancel(string Message, string Title)
         {
             this.BringToFront();
             Application.DoEvents();
@@ -403,7 +442,7 @@ namespace CodeGeneratorOpenness
             return MessageBox.Show(Message, Title, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
         }
 
-        private DialogResult messageOK(string Message, string Title)
+        private DialogResult MessageOK(string Message, string Title)
         {
             this.BringToFront();
             Application.DoEvents();
@@ -411,7 +450,7 @@ namespace CodeGeneratorOpenness
             return MessageBox.Show(Message, Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private DialogResult messageError(string Message, string Title)
+        private DialogResult MessageError(string Message, string Title)
         {
             this.BringToFront();
             Application.DoEvents();
@@ -421,7 +460,7 @@ namespace CodeGeneratorOpenness
 
         #endregion
 
-        #region menu items
+        #region Menu items
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -495,19 +534,19 @@ namespace CodeGeneratorOpenness
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            saveProject();
+            SaveProject();
         }
 
         private void compileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            compileProject();
+            CompileProject();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (project != null)
             {
-                saveProject();
+                SaveProject();
             }
             Application.Exit();
         }
@@ -516,7 +555,7 @@ namespace CodeGeneratorOpenness
         {
             if (project != null)
             {
-                saveProject();
+                SaveProject();
 
                 listBox1.Items.Clear();
                 listBox2.Items.Clear();
@@ -639,7 +678,7 @@ namespace CodeGeneratorOpenness
                                 }
                                 else
                                 {
-                                    messageOK("The file " + Path.GetFileName(openFileDialog.FileName) + " is not PLC block",
+                                    MessageOK("The file " + Path.GetFileName(openFileDialog.FileName) + " is not PLC block",
                                               "Not a PLC block file");
                                 }
                             }
@@ -647,19 +686,19 @@ namespace CodeGeneratorOpenness
                     }
                     catch (Exception ex)
                     {
-                        messageError(ex.Message,
+                        MessageError(ex.Message,
                                      "Exception");
                     }
                 }
                 else
                 {
-                    messageOK("Not a group selected!",
+                    MessageOK("Not a group selected!",
                               "Not a group");
                 }
             }
             else
             {
-                messageOK("Nothing selected!",
+                MessageOK("Nothing selected!",
                           "Select a group");
             }
         }
@@ -688,17 +727,17 @@ namespace CodeGeneratorOpenness
                             Properties.Settings.Default.Save();
 
                             // the API can not overwrite
-                            filePath = getNextFileName(saveFileDialog.FileName);
+                            filePath = GetNextFileName(saveFileDialog.FileName);
                             project.ExportProjectTexts(new FileInfo(filePath), new CultureInfo("de-DE"), new CultureInfo("en-GB"));
 
-                            messageOK("File " + Path.GetFileName(filePath) + " has been exported",
+                            MessageOK("File " + Path.GetFileName(filePath) + " has been exported",
                                       "Export language file");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    messageError(ex.Message,
+                    MessageError(ex.Message,
                                  "Exception");
                 }
             }
@@ -725,14 +764,14 @@ namespace CodeGeneratorOpenness
                         {
                             project.ImportProjectTexts(new FileInfo(openFileDialog.FileName), true);
 
-                            messageOK("File " + Path.GetFileName(openFileDialog.FileName) + " has been imported",
+                            MessageOK("File " + Path.GetFileName(openFileDialog.FileName) + " has been imported",
                                       "Import language file");
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    messageError(ex.Message,
+                    MessageError(ex.Message,
                                  "Exception");
                 }
             }
@@ -762,12 +801,12 @@ namespace CodeGeneratorOpenness
                         PlcBlock block = (PlcBlock)treeView1.SelectedNode.Tag;
 
                         string fPath = Application.StartupPath + "\\Export\\plcBlock_" + block.ProgrammingLanguage.ToString() + "_" + block.Name + ".xml";
-                        fPath = getNextFileName(fPath);
+                        fPath = GetNextFileName(fPath);
 
                         FileInfo f = new FileInfo(fPath);
                         block.Export(f, ExportOptions.None);
 
-                        messageOK("File " + f + " has beed exported",
+                        MessageOK("File " + Path.GetFileName(fPath) + " has beed exported",
                                   "Export");
                     }
 
@@ -777,18 +816,18 @@ namespace CodeGeneratorOpenness
                         PlcStruct block = (PlcStruct)treeView1.SelectedNode.Tag;
 
                         string fPath = Application.StartupPath + "\\Export\\plcBlock_" + block.Name + ".xml";
-                        fPath = getNextFileName(fPath);
+                        fPath = GetNextFileName(fPath);
 
                         FileInfo f = new FileInfo(fPath);
                         block.Export(f, ExportOptions.None);
 
-                        messageOK("File " + f + " has beed exported",
+                        MessageOK("File " + Path.GetFileName(fPath) + " has beed exported",
                                   "Export");
                     }
                 }
                 catch (Exception ex)
                 {
-                    messageError(ex.Message,
+                    MessageError(ex.Message,
                                  "Exception");
                 }
             }
@@ -801,10 +840,7 @@ namespace CodeGeneratorOpenness
 
             try
             {
-                // test file
                 string fPath = string.Empty;
-                //string fPath = Application.StartupPath + "\\Step.xml";
-
                 using (OpenFileDialog openFileDialog = new OpenFileDialog())
                 {
                     openFileDialog.Filter = "XML files (*.xnl)|*.xml|All files (*.*)|*.*";
@@ -850,32 +886,34 @@ namespace CodeGeneratorOpenness
                                 {
                                     // import the file
                                     software.TypeGroup.Types.Import(f, ImportOptions.None);
+                                    MessageOK("Data type " + Path.GetFileName(fPath) + " has been imported",
+                                              "Import language file");
+
                                     IterateThroughDevices(project);
                                 }
                                 else
                                 {
                                     // overwrite?
-                                    DialogResult res = MessageBox.Show("Data type " + name + " exists already. Overwrite ?",
-                                                                       "Overwrite",
-                                                                       MessageBoxButtons.OKCancel,
-                                                                       MessageBoxIcon.Question);
-                                    if (res == DialogResult.OK)
+                                    if (MessageYesNo("Data type " + name + " exists already. Overwrite ?", "Overwrite") == DialogResult.OK)
                                     {
                                         // overwrite data type
                                         software.TypeGroup.Types.Import(f, ImportOptions.Override);
+                                        MessageOK("Data type " + Path.GetFileName(fPath) + " has been imported",
+                                      "Import language file");
+
                                         IterateThroughDevices(project);
                                     }
                                 }
                             }
                             else
                                 // plc block exist
-                                messageError("PLC block with the name " + name + " exist!",
+                                MessageError("PLC block with the name " + name + " exist!",
                                              "Name exits");
                         }
                         else
                         {
                             // wrong data type
-                            messageError("Wrong XML file (PlcStruct) ?",
+                            MessageError("Wrong XML file (PlcStruct) ?",
                                          "Wrong file");
                         }
                     }
@@ -883,7 +921,7 @@ namespace CodeGeneratorOpenness
             }
             catch (Exception ex)
             {
-                messageError(ex.Message,
+                MessageError(ex.Message,
                              "Exception");
             }
         }
