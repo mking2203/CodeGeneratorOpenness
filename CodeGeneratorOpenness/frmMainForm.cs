@@ -800,14 +800,20 @@ namespace CodeGeneratorOpenness
                     {
                         PlcBlock block = (PlcBlock)treeView1.SelectedNode.Tag;
 
-                        string fPath = Application.StartupPath + "\\Export\\plcBlock_" + block.ProgrammingLanguage.ToString() + "_" + block.Name + ".xml";
-                        fPath = GetNextFileName(fPath);
+                        if (block.IsConsistent)
+                        {
+                            string fPath = Application.StartupPath + "\\Export\\plcBlock_" + block.ProgrammingLanguage.ToString() + "_" + block.Name + ".xml";
+                            fPath = GetNextFileName(fPath);
 
-                        FileInfo f = new FileInfo(fPath);
-                        block.Export(f, ExportOptions.None);
+                            FileInfo f = new FileInfo(fPath);
+                            block.Export(f, ExportOptions.None);
 
-                        MessageOK("File " + Path.GetFileName(fPath) + " has beed exported",
-                                  "Export");
+                            MessageOK("File " + Path.GetFileName(fPath) + " has beed exported",
+                                      "Export");
+                        }
+                        else
+                            MessageError("Block " + block.Name + " is not consistent. Please compile",
+                                      "Export");
                     }
 
                     // for data types
@@ -815,14 +821,20 @@ namespace CodeGeneratorOpenness
                     {
                         PlcStruct block = (PlcStruct)treeView1.SelectedNode.Tag;
 
-                        string fPath = Application.StartupPath + "\\Export\\plcBlock_" + block.Name + ".xml";
-                        fPath = GetNextFileName(fPath);
+                        if (block.IsConsistent)
+                        {
+                            string fPath = Application.StartupPath + "\\Export\\plcType_" + block.Name + ".xml";
+                            fPath = GetNextFileName(fPath);
 
-                        FileInfo f = new FileInfo(fPath);
-                        block.Export(f, ExportOptions.None);
+                            FileInfo f = new FileInfo(fPath);
+                            block.Export(f, ExportOptions.None);
 
-                        MessageOK("File " + Path.GetFileName(fPath) + " has beed exported",
-                                  "Export");
+                            MessageOK("File " + Path.GetFileName(fPath) + " has beed exported",
+                                      "Export");
+                        }
+                        else
+                            MessageError("Data type " + block.Name + " is not consistent. Please compile",
+                                      "Export");
                     }
                 }
                 catch (Exception ex)
