@@ -13,15 +13,30 @@ With some small changes this will also work with 14SP1,15 or 15.1 (work ongoing)
 <br>
 <br>
 Functions added:<br>
-
+<br>
 -open TIA with interface (first instance or new instance)<br>
 -open project file via file dialog<br>
+-compile software<br>
+-save project<br>
+-close project<br>
 -show folder structure software<br>
 -show data types<br>
--close project<br>
+-add / delete groups in the treeview<br>
+-imports PLC blocks (with rename if needed)<br>
+-import data types<br>
+-export blocks / types<br>
+-export project text (de/en)<br>
+-import project text (de/en)<br>
+<br>
+Test<br>
 -add / change language for editing<br>
--import a FC<br>
--import a data type<br>
+-for devolpment set the key in the registry to avoid firewall each time<br>
+<br>
+Limtitations:<br>
+-no global search for block/types<br>
+-import fails if language is not in the project<br>
+-export projects text can not overwrite existing files
+<br>
 <br>
 Screenshot:
 <br>
