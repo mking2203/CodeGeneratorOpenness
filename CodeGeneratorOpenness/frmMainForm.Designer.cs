@@ -84,6 +84,8 @@
             this.projectTextsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtPath = new System.Windows.Forms.TextBox();
+            this.btnAddPath = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -125,7 +127,7 @@
             // 
             // btnLanguage
             // 
-            this.btnLanguage.Location = new System.Drawing.Point(36, 404);
+            this.btnLanguage.Location = new System.Drawing.Point(12, 404);
             this.btnLanguage.Name = "btnLanguage";
             this.btnLanguage.Size = new System.Drawing.Size(97, 43);
             this.btnLanguage.TabIndex = 4;
@@ -557,11 +559,31 @@
             this.importToolStripMenuItem1.Text = "Import";
             this.importToolStripMenuItem1.Click += new System.EventHandler(this.importToolStripMenuItem1_Click);
             // 
+            // txtPath
+            // 
+            this.txtPath.Location = new System.Drawing.Point(12, 298);
+            this.txtPath.Name = "txtPath";
+            this.txtPath.Size = new System.Drawing.Size(244, 20);
+            this.txtPath.TabIndex = 37;
+            this.txtPath.Text = "Main\\Axis01\\Control 0";
+            // 
+            // btnAddPath
+            // 
+            this.btnAddPath.Location = new System.Drawing.Point(159, 324);
+            this.btnAddPath.Name = "btnAddPath";
+            this.btnAddPath.Size = new System.Drawing.Size(97, 43);
+            this.btnAddPath.TabIndex = 38;
+            this.btnAddPath.Text = "Add path";
+            this.btnAddPath.UseVisualStyleBackColor = true;
+            this.btnAddPath.Click += new System.EventHandler(this.btnAddPath_Click);
+            // 
             // frmMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(975, 491);
+            this.Controls.Add(this.btnAddPath);
+            this.Controls.Add(this.txtPath);
             this.Controls.Add(this.label11);
             this.Controls.Add(this.pictureBox8);
             this.Controls.Add(this.label10);
@@ -672,6 +694,8 @@
         private System.Windows.Forms.ToolStripMenuItem projectTextsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem1;
+        private System.Windows.Forms.TextBox txtPath;
+        private System.Windows.Forms.Button btnAddPath;
     }
 }
 

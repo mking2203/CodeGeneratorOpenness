@@ -802,7 +802,11 @@ namespace CodeGeneratorOpenness
 
                         if (block.IsConsistent)
                         {
-                            string fPath = Application.StartupPath + "\\Export\\plcBlock_" + block.ProgrammingLanguage.ToString() + "_" + block.Name + ".xml";
+                            string fPath = Application.StartupPath + "\\Export\\" +
+                                block.ProgrammingLanguage.ToString() + "_" +
+                                block.Name + "_" +
+                                "V" + block.HeaderVersion.ToString() +
+                                ".xml";
                             fPath = GetNextFileName(fPath);
 
                             FileInfo f = new FileInfo(fPath);
@@ -823,7 +827,10 @@ namespace CodeGeneratorOpenness
 
                         if (block.IsConsistent)
                         {
-                            string fPath = Application.StartupPath + "\\Export\\plcType_" + block.Name + ".xml";
+                            string fPath = Application.StartupPath + "\\Export\\plcType_" +
+                                block.Name + "_" +
+                                block.ModifiedDate.ToShortDateString() +
+                                ".xml";
                             fPath = GetNextFileName(fPath);
 
                             FileInfo f = new FileInfo(fPath);
@@ -939,5 +946,43 @@ namespace CodeGeneratorOpenness
         }
 
         #endregion
+
+        private void btnAddPath_Click(object sender, EventArgs e)
+        {
+            if (software != null)
+            {
+                string[] lst = txtPath.Text.Split('\\');
+                PlcBlockGroup group = software.BlockGroup;
+
+                foreach (string p in lst)
+                {
+                    string name = p.Trim();
+                    if (!groups.GroupExists(name, group))
+                    {
+                        try
+                        {
+                            // create new group
+                            group.Groups.Create(name);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageError(ex.Message, "Exception");
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        // grop exist already
+                    }
+
+                    // into next group
+                    group = group.Groups.Find(name);
+                }
+
+                IterateThroughDevices(project);
+            }
+        }
     }
 }
+
