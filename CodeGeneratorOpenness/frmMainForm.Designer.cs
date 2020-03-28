@@ -86,6 +86,7 @@
             this.importToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnAddPath = new System.Windows.Forms.Button();
+            this.btnXML = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -577,11 +578,22 @@
             this.btnAddPath.UseVisualStyleBackColor = true;
             this.btnAddPath.Click += new System.EventHandler(this.btnAddPath_Click);
             // 
+            // btnXML
+            // 
+            this.btnXML.Location = new System.Drawing.Point(159, 404);
+            this.btnXML.Name = "btnXML";
+            this.btnXML.Size = new System.Drawing.Size(97, 43);
+            this.btnXML.TabIndex = 39;
+            this.btnXML.Text = "Test XML";
+            this.btnXML.UseVisualStyleBackColor = true;
+            this.btnXML.Click += new System.EventHandler(this.btnXML_Click);
+            // 
             // frmMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(975, 491);
+            this.Controls.Add(this.btnXML);
             this.Controls.Add(this.btnAddPath);
             this.Controls.Add(this.txtPath);
             this.Controls.Add(this.label11);
@@ -696,6 +708,7 @@
         private System.Windows.Forms.ToolStripMenuItem importToolStripMenuItem1;
         private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.Button btnAddPath;
+        private System.Windows.Forms.Button btnXML;
     }
 }
 

@@ -3,10 +3,10 @@ CodeGeneratorOpenness/obj/*
 CodeGeneratorOpenness/bin/Debug/CodeGeneratorOpenness.exe
 CodeGeneratorOpenness/bin/Debug/CodeGeneratorOpenness.exe.config
 CodeGeneratorOpenness/bin/Debug/CodeGeneratorOpenness.pdb
-CodeGeneratorOpenness/bin/Debug/Export.xml
-CodeGeneratorOpenness/bin/Debug/Export - Kopie.xml
 CodeGeneratorOpenness/bin/Debug/Temp/temp.xml
 CodeGeneratorOpenness/Ressources/Thumbs.db
 CodeGeneratorOpenness/Thumbs.db
 CodeGeneratorOpenness/Ressources/Thumbs.db
 *.xlsx
+CodeGeneratorOpenness/bin/Debug/Export/*.xml
+CodeGeneratorOpenness/bin/Debug/Import/*.xml

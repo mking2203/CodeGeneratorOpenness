@@ -30,6 +30,7 @@ using Siemens.Engineering.Library;
 using System.IO;
 using System.Globalization;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace CodeGeneratorOpenness
 {
@@ -608,7 +609,7 @@ namespace CodeGeneratorOpenness
 
                                 PlcBlockGroup group = (PlcBlockGroup)sel;
                                 cImportBlock f = new cImportBlock(openFileDialog.FileName);
-                                if(f.BlockName != string.Empty)
+                                if (f.BlockName != string.Empty)
                                 {
                                     // check if the data type exists
                                     if (!groups.NameExists(f.BlockName, software))
@@ -961,6 +962,63 @@ namespace CodeGeneratorOpenness
                 IterateThroughDevices(project);
             }
         }
+
+        private void btnXML_Click(object sender, EventArgs e)
+        {
+            string fPath = Application.StartupPath + "\\Export\\LAD_Baustein_19_V0.1(3).xml";
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(fPath);
+
+            XmlNode blocks = xmlDoc.SelectSingleNode("//SW.Blocks.FC//ObjectList");
+            XmlNodeList xmlNodes = blocks.SelectNodes("MultilingualText");
+            foreach (XmlNode n in xmlNodes)
+            {
+                MemoryStream stm = new MemoryStream();
+
+                StreamWriter stw = new StreamWriter(stm);
+                stw.Write(n.OuterXml);
+                stw.Flush();
+                stm.Position = 0;
+
+                XmlSerializer ser = new XmlSerializer(typeof(MultilingualText));
+                MultilingualText result = (ser.Deserialize(stm) as MultilingualText);
+
+                Console.WriteLine(result.ObjectList[0].AttributeList.Text);
+            }
+
+            XmlNodeList comps = blocks.SelectNodes("SW.Blocks.CompileUnit");
+            foreach (XmlNode c in comps)
+            {
+                blocks = c.SelectSingleNode("ObjectList");
+                xmlNodes = blocks.SelectNodes("MultilingualText");
+                foreach (XmlNode n in xmlNodes)
+                {
+                    MemoryStream stm = new MemoryStream();
+
+                    StreamWriter stw = new StreamWriter(stm);
+                    stw.Write(n.OuterXml);
+                    stw.Flush();
+                    stm.Position = 0;
+
+                    XmlSerializer ser = new XmlSerializer(typeof(MultilingualText));
+                    MultilingualText result = (ser.Deserialize(stm) as MultilingualText);
+
+                    Console.WriteLine(result.ObjectList[0].AttributeList.Text);
+                }
+            }
+
+
+
+        }
+
+
+
+
+
+
+
+
     }
 }
 

@@ -42,6 +42,20 @@ namespace CodeGeneratorOpenness
                     {
                         nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Blocks." + BlockType + "//AttributeList//Name");
                         blockName = nameDefination.InnerText;
+
+                        XmlNodeList nodes = xmlDoc.GetElementsByTagName("Access");
+                        foreach (XmlNode n in nodes)
+                        {
+                            
+                            if(n.Attributes["Scope"].Value == "GlobalVariable")
+                            {
+
+                            }
+                            else if (n.Attributes["Scope"].Value == "LocalVariable")
+                            {
+
+                            }
+                        }
                     }
                     else
                     {
