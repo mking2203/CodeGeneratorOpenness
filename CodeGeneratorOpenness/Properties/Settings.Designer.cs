@@ -23,30 +23,51 @@ namespace CodeGeneratorOpenness.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string PathImportBlock {
             get {
                 return ((string)(this["PathImportBlock"]));
             }
+            set {
+                this["PathImportBlock"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string PathImportDataTypes {
             get {
                 return ((string)(this["PathImportDataTypes"]));
             }
+            set {
+                this["PathImportDataTypes"] = value;
+            }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string PathLanguageText {
             get {
                 return ((string)(this["PathLanguageText"]));
+            }
+            set {
+                this["PathLanguageText"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PathOpenProject {
+            get {
+                return ((string)(this["PathOpenProject"]));
+            }
+            set {
+                this["PathOpenProject"] = value;
             }
         }
     }

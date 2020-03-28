@@ -2,13 +2,16 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="CodeGeneratorOpenness.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="PathImportBlock" Type="System.String" Scope="Application">
+    <Setting Name="PathImportBlock" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="PathImportDataTypes" Type="System.String" Scope="Application">
+    <Setting Name="PathImportDataTypes" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="PathLanguageText" Type="System.String" Scope="Application">
+    <Setting Name="PathLanguageText" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="PathOpenProject" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

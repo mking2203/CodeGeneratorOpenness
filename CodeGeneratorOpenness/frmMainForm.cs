@@ -491,20 +491,26 @@ namespace CodeGeneratorOpenness
                 // no open project - then open file dialog
                 if (projects.Count == 0)
                 {
-                    string filePath = string.Empty;
+                    string p = AppDomain.CurrentDomain.SetupInformation.ConfigurationFile;
+
+
+                    string filePath = (string)Properties.Settings.Default["PathOpenProject"];
+                    if (filePath == string.Empty) filePath = Application.StartupPath;
+
                     using (OpenFileDialog openFileDialog = new OpenFileDialog())
                     {
                         openFileDialog.Filter = "V16 project files (*.ap16)|*.ap16|All files (*.*)|*.*";
                         openFileDialog.FilterIndex = 1;
-                        openFileDialog.RestoreDirectory = true;
+                        openFileDialog.InitialDirectory = filePath;
 
                         if (openFileDialog.ShowDialog() == DialogResult.OK)
                         {
-                            //Get the path of specified file
-                            filePath = openFileDialog.FileName;
+                            Properties.Settings.Default["PathOpenProject"] = openFileDialog.FileName;
+                            //Properties.Settings.Default.Upgrade();
+                            Properties.Settings.Default.Save();
 
                             // load projectpath
-                            FileInfo projectPath = new FileInfo(filePath);
+                            FileInfo projectPath = new FileInfo(openFileDialog.FileName);
                             try
                             {
                                 project = projects.Open(projectPath);
@@ -601,47 +607,20 @@ namespace CodeGeneratorOpenness
                                 Properties.Settings.Default.Save();
 
                                 PlcBlockGroup group = (PlcBlockGroup)sel;
-                                string fPath = openFileDialog.FileName;
-                                FileInfo f = new FileInfo(fPath);
-
-                                // now load the xml document
-                                XmlDocument xmlDoc = new XmlDocument();
-                                xmlDoc.Load(fPath);
-
-                                // get version of the file
-                                XmlNode bkm = xmlDoc.SelectSingleNode("//Document//Engineering");
-                                string version = bkm.Attributes["version"].Value;
-
-                                string blockType = string.Empty;
-
-                                XmlNode document = xmlDoc.SelectSingleNode("//Document");
-                                foreach (XmlNode node in document.ChildNodes)
+                                cImportBlock f = new cImportBlock(openFileDialog.FileName);
+                                if(f.BlockName != string.Empty)
                                 {
-                                    if (node.Name.StartsWith("SW.Blocks."))
-                                    {
-                                        blockType = node.Name.Substring(10);
-                                        Console.WriteLine(node.Name.Substring(10));
-                                    }
-                                }
-
-                                // we found the type of the software
-                                if (blockType != string.Empty)
-                                {
-                                    // get the name of the data type
-                                    XmlNode nameDefination = xmlDoc.SelectSingleNode("//Document//SW.Blocks." + blockType + "//AttributeList//Name");
-                                    string name = nameDefination.InnerText;
-
                                     // check if the data type exists
-                                    if (!groups.NameExists(name, software))
+                                    if (!groups.NameExists(f.BlockName, software))
                                     {
                                         // import the file
-                                        group.Blocks.Import(f, ImportOptions.None);
+                                        group.Blocks.Import(f.XmlFileInfo, ImportOptions.None);
                                         IterateThroughDevices(project);
                                     }
                                     else
                                     {
                                         // overwrite? yes = overwrite / no = new name / cancel = just cancel
-                                        res = MessageBox.Show("Data block " + name + " exists already. Overwrite(Yes) or Rename(No) ?",
+                                        res = MessageBox.Show("Data block " + f.BlockName + " exists already. Overwrite(Yes) or Rename(No) ?",
                                                               "Overwrite / Rename",
                                                               MessageBoxButtons.YesNoCancel,
                                                               MessageBoxIcon.Question);
@@ -649,27 +628,26 @@ namespace CodeGeneratorOpenness
                                         if (res == DialogResult.Yes)
                                         {
                                             // overwrite plc block
-                                            group.Blocks.Import(f, ImportOptions.Override);
+                                            group.Blocks.Import(f.XmlFileInfo, ImportOptions.Override);
                                             IterateThroughDevices(project);
                                         }
                                         else if (res == DialogResult.No)
                                         {
                                             // with a different name we need to save a copy 
-
                                             res = DialogResult.OK;
-                                            while (groups.NameExists(name, software) && res == DialogResult.OK)
+                                            string newName = f.BlockName;
+
+                                            while (groups.NameExists(newName, software) && res == DialogResult.OK)
                                             {
-                                                res = Input.InputBox("New block name", "Enter a new block name", ref name);
+                                                res = Input.InputBox("New block name", "Enter a new block name", ref newName);
                                             }
                                             // we don't cancel, so import with new name
                                             if (res == DialogResult.OK)
                                             {
-                                                nameDefination.InnerText = name;
+                                                f.BlockName = newName;
+                                                f.SaveXml(Application.StartupPath + "\\Temp\\temp.xml");
 
-                                                xmlDoc.Save(Application.StartupPath + "\\Temp\\temp.xml");
-                                                f = new FileInfo(Application.StartupPath + "\\Temp\\temp.xml");
-
-                                                group.Blocks.Import(f, ImportOptions.None);
+                                                group.Blocks.Import(f.XmlFileInfo, ImportOptions.None);
                                                 IterateThroughDevices(project);
                                             }
                                         }

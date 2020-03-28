@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="cFirewall.cs" />
     <Compile Include="cFunctionGroups.cs" />
+    <Compile Include="cImportBlock.cs" />
     <Compile Include="frmMainForm.cs">
       <SubType>Form</SubType>
     </Compile>
