@@ -60,6 +60,23 @@ namespace CodeGeneratorOpenness
             Directory.CreateDirectory(Application.StartupPath + "\\Export");
             Directory.CreateDirectory(Application.StartupPath + "\\Import");
             Directory.CreateDirectory(Application.StartupPath + "\\Temp");
+
+            frmTranslate();
+        }
+
+        private void frmTranslate()
+        {
+            string culture = (string)Properties.Settings.Default["Language"];
+            cTranlate translate = new cTranlate(this, culture);
+            translate.TranslateContext(ctxBlock, culture);
+            translate.TranslateContext(ctxGroup, culture);
+            translate.TranslateContext(ctxSoftware, culture);
+
+            englishToolStripMenuItem.Checked = false;
+            germanToolStripMenuItem.Checked = false;
+
+            if (culture == "DE") germanToolStripMenuItem.Checked = true;
+            if (culture == "EN") englishToolStripMenuItem.Checked = true;
         }
 
         private void frmMainForm_Closing(object sender, FormClosingEventArgs e)
@@ -507,7 +524,6 @@ namespace CodeGeneratorOpenness
                         if (openFileDialog.ShowDialog() == DialogResult.OK)
                         {
                             Properties.Settings.Default["PathOpenProject"] = openFileDialog.FileName;
-                            //Properties.Settings.Default.Upgrade();
                             Properties.Settings.Default.Save();
 
                             // load projectpath
@@ -1007,18 +1023,23 @@ namespace CodeGeneratorOpenness
                     Console.WriteLine(result.ObjectList[0].AttributeList.Text);
                 }
             }
-
-
-
         }
 
+        private void englishToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default["Language"] = "EN";
+            Properties.Settings.Default.Save();
 
+            frmTranslate();
+        }
 
+        private void germanToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default["Language"] = "DE";
+            Properties.Settings.Default.Save();
 
-
-
-
-
+            frmTranslate();
+        }
     }
 }
 

@@ -71,12 +71,12 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.projectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.compileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripSeparator();
             this.importToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.blocksToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataTypesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,6 +87,9 @@
             this.txtPath = new System.Windows.Forms.TextBox();
             this.btnAddPath = new System.Windows.Forms.Button();
             this.btnXML = new System.Windows.Forms.Button();
+            this.languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.englishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.germanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -149,9 +152,9 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(125, 155);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(29, 13);
+            this.label2.Size = new System.Drawing.Size(27, 13);
             this.label2.TabIndex = 6;
-            this.label2.Text = "CPU";
+            this.label2.Text = "PLC";
             // 
             // label3
             // 
@@ -441,7 +444,8 @@
             this.projectToolStripMenuItem,
             this.importToolStripMenuItem,
             this.exportToolStripMenuItem,
-            this.projectTextsToolStripMenuItem});
+            this.projectTextsToolStripMenuItem,
+            this.languageToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(975, 24);
@@ -452,12 +456,12 @@
             // 
             this.projectToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.compileToolStripMenuItem,
             this.saveToolStripMenuItem,
             this.closeToolStripMenuItem,
             this.toolStripMenuItem1,
-            this.exitToolStripMenuItem,
-            this.toolStripMenuItem2});
+            this.exitToolStripMenuItem});
             this.projectToolStripMenuItem.Name = "projectToolStripMenuItem";
             this.projectToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
             this.projectToolStripMenuItem.Text = "Project";
@@ -468,6 +472,11 @@
             this.openToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(116, 6);
             // 
             // compileToolStripMenuItem
             // 
@@ -501,11 +510,6 @@
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // toolStripMenuItem2
-            // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(116, 6);
             // 
             // importToolStripMenuItem
             // 
@@ -587,6 +591,31 @@
             this.btnXML.Text = "Test XML";
             this.btnXML.UseVisualStyleBackColor = true;
             this.btnXML.Click += new System.EventHandler(this.btnXML_Click);
+            // 
+            // languageToolStripMenuItem
+            // 
+            this.languageToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.englishToolStripMenuItem,
+            this.germanToolStripMenuItem});
+            this.languageToolStripMenuItem.Name = "languageToolStripMenuItem";
+            this.languageToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
+            this.languageToolStripMenuItem.Text = "Language";
+            // 
+            // englishToolStripMenuItem
+            // 
+            this.englishToolStripMenuItem.Checked = true;
+            this.englishToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.englishToolStripMenuItem.Name = "englishToolStripMenuItem";
+            this.englishToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.englishToolStripMenuItem.Text = "English";
+            this.englishToolStripMenuItem.Click += new System.EventHandler(this.englishToolStripMenuItem_Click);
+            // 
+            // germanToolStripMenuItem
+            // 
+            this.germanToolStripMenuItem.Name = "germanToolStripMenuItem";
+            this.germanToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.germanToolStripMenuItem.Text = "German";
+            this.germanToolStripMenuItem.Click += new System.EventHandler(this.germanToolStripMenuItem_Click);
             // 
             // frmMainForm
             // 
@@ -709,6 +738,9 @@
         private System.Windows.Forms.TextBox txtPath;
         private System.Windows.Forms.Button btnAddPath;
         private System.Windows.Forms.Button btnXML;
+        private System.Windows.Forms.ToolStripMenuItem languageToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem englishToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem germanToolStripMenuItem;
     }
 }
 

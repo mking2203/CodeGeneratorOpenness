@@ -14,5 +14,8 @@
     <Setting Name="PathOpenProject" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="Language" Type="System.String" Scope="User">
+      <Value Profile="(Default)">EN</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
