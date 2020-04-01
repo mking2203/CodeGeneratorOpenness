@@ -1,9 +1,10 @@
 # CodeGeneratorOpenness
 Siemens TIA Portal Code Generator via Openness Interface
 
-Since we are doing import of Graph step sequence through an Excel sheet using Openness, I was thinking of building a "structure" code generator for the TIA portal. Right now, most important functions are working so it would be possible to 
--build a group tree
--import any kind of blocks like FB, FC, OB or data types
+Since we are doing import of Graph step sequence through an Excel sheet using Openness, I was thinking of building a "structure" code generator for the TIA portal. Right now, most important functions are working so it would be possible to
+<br>
+-build a group tree<br>
+-import any kind of blocks like FB, FC, OB or data types<br>
 
 This covers mainly the function we can find in the Openness scripter. But I want to go a little further to build structures more variable. Not sure where it leads to but my goal will be to use templates to build FB with n-times valve FBs through a scripter or later on maybe a tool to configure this.
 
@@ -28,6 +29,7 @@ Functions added:<br>
 -show folder structure software<br>
 -show data types<br>
 -add / delete groups in the treeview<br>
+-add complete path to the treeview<br>
 -imports PLC blocks (with rename if needed)<br>
 -import data types<br>
 -export blocks / types<br>
