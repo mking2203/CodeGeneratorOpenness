@@ -31,6 +31,7 @@ using System.IO;
 using System.Globalization;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Text.RegularExpressions;
 
 namespace CodeGeneratorOpenness
 {
@@ -198,6 +199,24 @@ namespace CodeGeneratorOpenness
                     fileName = fileName.Replace("(" + i + ")" + extension, "(" + ++i + ")" + extension);
             }
             return fileName;
+        }
+
+        public string FindNextName(string Name)
+        {
+            // check the existing name has a number
+            string f = Regex.Match(Name, @"\d+$").ToString();
+            if (f != string.Empty)
+            {
+                int fNo = Convert.ToInt32(f);
+                int y = Name.LastIndexOf(f);
+
+                return Name.Substring(0, y) + (fNo + 1).ToString();
+            }
+            else
+            {
+                // no number?
+                return Name + "1";
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
