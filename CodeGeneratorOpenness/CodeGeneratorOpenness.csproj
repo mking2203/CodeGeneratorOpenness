@@ -62,6 +62,7 @@
     <Compile Include="cImportBlock.cs" />
     <Compile Include="cMulilingualText.cs" />
     <Compile Include="cTranlate.cs" />
+    <Compile Include="cXmlFile.cs" />
     <Compile Include="cXmlFunctions.cs" />
     <Compile Include="frmMainForm.cs">
       <SubType>Form</SubType>
