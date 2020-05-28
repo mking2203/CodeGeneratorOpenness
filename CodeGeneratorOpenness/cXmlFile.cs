@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml;
 
-namespace ConsoleApp1
+namespace CodeGeneratorOpenness
 {
     public class cXmlFile
     {

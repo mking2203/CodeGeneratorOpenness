@@ -84,12 +84,13 @@
             this.projectTextsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.importToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.txtPath = new System.Windows.Forms.TextBox();
-            this.btnAddPath = new System.Windows.Forms.Button();
-            this.btnXML = new System.Windows.Forms.Button();
             this.languageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.englishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.germanToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.txtPath = new System.Windows.Forms.TextBox();
+            this.btnAddPath = new System.Windows.Forms.Button();
+            this.btnXML = new System.Windows.Forms.Button();
+            this.btnCombine = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -469,45 +470,45 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(116, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
             // 
             // compileToolStripMenuItem
             // 
             this.compileToolStripMenuItem.Name = "compileToolStripMenuItem";
-            this.compileToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.compileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.compileToolStripMenuItem.Text = "Compile";
             this.compileToolStripMenuItem.Click += new System.EventHandler(this.compileToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(116, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -523,14 +524,14 @@
             // blocksToolStripMenuItem
             // 
             this.blocksToolStripMenuItem.Name = "blocksToolStripMenuItem";
-            this.blocksToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.blocksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.blocksToolStripMenuItem.Text = "PLC Blocks";
             this.blocksToolStripMenuItem.Click += new System.EventHandler(this.blocksToolStripMenuItem_Click);
             // 
             // dataTypesToolStripMenuItem
             // 
             this.dataTypesToolStripMenuItem.Name = "dataTypesToolStripMenuItem";
-            this.dataTypesToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
+            this.dataTypesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.dataTypesToolStripMenuItem.Text = "PLC Data types";
             this.dataTypesToolStripMenuItem.Click += new System.EventHandler(this.dataTypesToolStripMenuItem_Click);
             // 
@@ -553,44 +554,16 @@
             // exportToolStripMenuItem1
             // 
             this.exportToolStripMenuItem1.Name = "exportToolStripMenuItem1";
-            this.exportToolStripMenuItem1.Size = new System.Drawing.Size(110, 22);
+            this.exportToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.exportToolStripMenuItem1.Text = "Export";
             this.exportToolStripMenuItem1.Click += new System.EventHandler(this.exportToolStripMenuItem1_Click);
             // 
             // importToolStripMenuItem1
             // 
             this.importToolStripMenuItem1.Name = "importToolStripMenuItem1";
-            this.importToolStripMenuItem1.Size = new System.Drawing.Size(110, 22);
+            this.importToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.importToolStripMenuItem1.Text = "Import";
             this.importToolStripMenuItem1.Click += new System.EventHandler(this.importToolStripMenuItem1_Click);
-            // 
-            // txtPath
-            // 
-            this.txtPath.Location = new System.Drawing.Point(12, 298);
-            this.txtPath.Name = "txtPath";
-            this.txtPath.Size = new System.Drawing.Size(244, 20);
-            this.txtPath.TabIndex = 37;
-            this.txtPath.Text = "Main\\Axis01\\Control 0";
-            // 
-            // btnAddPath
-            // 
-            this.btnAddPath.Location = new System.Drawing.Point(159, 324);
-            this.btnAddPath.Name = "btnAddPath";
-            this.btnAddPath.Size = new System.Drawing.Size(97, 43);
-            this.btnAddPath.TabIndex = 38;
-            this.btnAddPath.Text = "Add path";
-            this.btnAddPath.UseVisualStyleBackColor = true;
-            this.btnAddPath.Click += new System.EventHandler(this.btnAddPath_Click);
-            // 
-            // btnXML
-            // 
-            this.btnXML.Location = new System.Drawing.Point(159, 404);
-            this.btnXML.Name = "btnXML";
-            this.btnXML.Size = new System.Drawing.Size(97, 43);
-            this.btnXML.TabIndex = 39;
-            this.btnXML.Text = "Test XML";
-            this.btnXML.UseVisualStyleBackColor = true;
-            this.btnXML.Click += new System.EventHandler(this.btnXML_Click);
             // 
             // languageToolStripMenuItem
             // 
@@ -617,11 +590,50 @@
             this.germanToolStripMenuItem.Text = "German";
             this.germanToolStripMenuItem.Click += new System.EventHandler(this.germanToolStripMenuItem_Click);
             // 
+            // txtPath
+            // 
+            this.txtPath.Location = new System.Drawing.Point(12, 298);
+            this.txtPath.Name = "txtPath";
+            this.txtPath.Size = new System.Drawing.Size(244, 20);
+            this.txtPath.TabIndex = 37;
+            this.txtPath.Text = "Main\\Axis01\\Control 0";
+            // 
+            // btnAddPath
+            // 
+            this.btnAddPath.Location = new System.Drawing.Point(159, 324);
+            this.btnAddPath.Name = "btnAddPath";
+            this.btnAddPath.Size = new System.Drawing.Size(97, 43);
+            this.btnAddPath.TabIndex = 38;
+            this.btnAddPath.Text = "Add path";
+            this.btnAddPath.UseVisualStyleBackColor = true;
+            this.btnAddPath.Click += new System.EventHandler(this.btnAddPath_Click);
+            // 
+            // btnXML
+            // 
+            this.btnXML.Location = new System.Drawing.Point(159, 373);
+            this.btnXML.Name = "btnXML";
+            this.btnXML.Size = new System.Drawing.Size(97, 43);
+            this.btnXML.TabIndex = 39;
+            this.btnXML.Text = "Test XML";
+            this.btnXML.UseVisualStyleBackColor = true;
+            this.btnXML.Click += new System.EventHandler(this.btnXML_Click);
+            // 
+            // btnCombine
+            // 
+            this.btnCombine.Location = new System.Drawing.Point(159, 422);
+            this.btnCombine.Name = "btnCombine";
+            this.btnCombine.Size = new System.Drawing.Size(97, 43);
+            this.btnCombine.TabIndex = 40;
+            this.btnCombine.Text = "Combine";
+            this.btnCombine.UseVisualStyleBackColor = true;
+            this.btnCombine.Click += new System.EventHandler(this.btnCombine_Click);
+            // 
             // frmMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(975, 491);
+            this.Controls.Add(this.btnCombine);
             this.Controls.Add(this.btnXML);
             this.Controls.Add(this.btnAddPath);
             this.Controls.Add(this.txtPath);
@@ -741,6 +753,7 @@
         private System.Windows.Forms.ToolStripMenuItem languageToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem englishToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem germanToolStripMenuItem;
+        private System.Windows.Forms.Button btnCombine;
     }
 }
 

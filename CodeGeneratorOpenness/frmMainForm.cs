@@ -215,7 +215,7 @@ namespace CodeGeneratorOpenness
             else
             {
                 // no number?
-                return Name + "1";
+                return Name + "_1";
             }
         }
 
@@ -1059,6 +1059,113 @@ namespace CodeGeneratorOpenness
 
             frmTranslate();
         }
+
+        private void btnCombine_Click(object sender, EventArgs e)
+        {
+            cXmlFile f1 = new cXmlFile(Application.StartupPath + "\\Import\\LAD_TemplateValve_V0.1.xml");
+            cXmlFile f2 = new cXmlFile(Application.StartupPath + "\\Import\\LAD_Logic_Block_V0.1.xml");
+
+            f2.ChangeIDs(f1.uidHigh - f1.uidLow + 1,
+                         f1.idHigh - f1.idLow + 1);
+
+            // now combine
+
+            // Interface merge
+            XmlNode def2 = f2.XmlDocument.SelectSingleNode("//Interface").ChildNodes[0];
+
+            // now add vars from 2. file to first file
+            foreach (XmlNode aTyp in def2.ChildNodes)
+            {
+                foreach (XmlNode aVar in aTyp.ChildNodes)
+                {
+                    XmlNode newNode = f1.XmlDocument.ImportNode(aVar, true);
+                    AddVarDef(f1.XmlDocument, f2.XmlDocument, aTyp.Attributes["Name"].Value, newNode);
+                }
+            }
+
+            // Objekte merge
+            XmlNode n2 = f2.XmlDocument.SelectSingleNode("//ObjectList");
+            foreach (XmlNode x in n2.ChildNodes)
+            {
+                if (x.Name.StartsWith("SW.Blocks"))
+                {
+                    XmlNode newNode = f1.XmlDocument.ImportNode(x, true);
+                    AddSwBlock(f1.XmlDocument, newNode);
+                }
+            }
+
+            f1.GetLimitIDs();
+
+            // more combines here
+
+            f1.XmlDocument.Save(Application.StartupPath + "\\Import\\Combined.xml");
+        }
+
+        public void AddSwBlock(XmlDocument doc, XmlNode node)
+        {
+            XmlNode n1 = doc.SelectSingleNode("//ObjectList");
+            XmlNode bl = n1.FirstChild;
+
+            foreach (XmlNode x in n1.ChildNodes)
+            {
+                if (x.Name.StartsWith("SW.Blocks"))
+                {
+                    bl = x;
+                }
+            }
+
+            if (bl != null)
+            {
+                n1.InsertAfter(node, bl);
+            }
+        }
+
+        public void AddVarDef(XmlDocument Document, XmlDocument MergeDoc, string Name, XmlNode Node)
+        {
+            XmlNode Section = Document.SelectSingleNode("//Interface").ChildNodes[0];
+
+            string member = Node.Attributes["Name"].Value;
+            bool exits = false;
+
+            foreach (XmlNode aTyp in Section.ChildNodes)
+            {
+                if (aTyp.Attributes["Name"].Value == Name)
+                {
+                    foreach (XmlNode aName in aTyp.ChildNodes)
+                    {
+                        if (aName.Attributes["Name"].Value == member)
+                        {
+                            exits = true;
+                            break;
+                        }
+                    }
+
+                    if (exits)
+                    {
+                        XmlNodeList lst = MergeDoc.GetElementsByTagName("Component");
+
+                        string name = Node.Attributes["Name"].Value;
+                        string newName = FindNextName(name);
+
+                        Node.Attributes["Name"].Value = newName;
+
+                        foreach (XmlNode x in lst)
+                        {
+                            if (x.Attributes["Name"].Value == name)
+                            {
+                                x.Attributes["Name"].Value = newName;
+                            }
+                        }
+
+
+                    }
+                    aTyp.AppendChild(Node);
+
+                    return;
+                }
+            }
+        }
+
     }
 }
 
