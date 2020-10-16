@@ -1,0 +1,13 @@
+﻿# XML-Dateien importieren
+
+#open Portal
+#open Project "P:\Projekte\Test\ProjektTestImport\ProjektTestImport.ap16"
+
+# project is already open
+connect Portal "P:\Projekte\Test\ProjektTestImport\ProjektTestImport.ap16"
+
+# select the plc
+select Plc "PLC_1"
+
+select ProgramBlocks "FB_SEQ_One"
+export ProgramBlocks "P:\VmSharedFolder" None
