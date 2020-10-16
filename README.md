@@ -5,6 +5,7 @@ Since we are doing import of Graph step sequence through an Excel sheet using Op
 <br>
 -build a group tree<br>
 -import any kind of blocks like FB, FC, OB or data types<br>
+-generate step sequences as graph (not 100% complete yet) - no config right now
 
 This covers mainly the function we can find in the Openness scripter. But I want to go a little further to build structures more variable. Not sure where it leads to but my goal will be to use templates to build FB with n-times valve FBs through a scripter or later on maybe a tool to configure this.
 
@@ -52,5 +53,9 @@ Screenshot:
 
 <br>
 <br>
-Some code for the Graph generation is "reversed engineered" since there is no description.
+Some code for the graph generation is "reversed engineered" since there is no description.
+<br>
+For the sequence generation I used a V14 sample of an empty seqeunce. In the XML we need to add transitions and steps into the static area (change in later versions) Then I enumerate through my defined steps to build the sequence including transitions and branches. Of course I can not cover 100% of any posibility, so my sequences are straight forward - only with alternate branches and jumps. In the next version I will also cover actions and supervisions for each step.
+<br>
+<img src="https://github.com/mking2203/CodeGeneratorOpenness/raw/master/Sample/Sequence.png" alt="Step sequence">
 
