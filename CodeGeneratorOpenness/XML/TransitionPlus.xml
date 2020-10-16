@@ -1,0 +1,17 @@
+﻿<Member Name="" Datatype="G7_TransitionPlus_V4" Version = "1.0">
+  <AttributeList>
+    <BooleanAttribute Name="ExternalAccessible" SystemDefined="true">false</BooleanAttribute>
+    <BooleanAttribute Name="ExternalVisible" SystemDefined="true">false</BooleanAttribute>
+    <BooleanAttribute Name="ExternalWritable" SystemDefined="true">false</BooleanAttribute>
+  </AttributeList>
+  <Comment Informative="true">
+    <MultiLanguageText Lang="de-DE">Transitionsstruktur</MultiLanguageText>
+  </Comment>
+  <Sections>
+    <Section Name="None">
+      <Member Name="TNO" Datatype="Int">
+        <StartValue Informative="true"></StartValue>
+      </Member>
+    </Section>
+  </Sections>
+</Member>

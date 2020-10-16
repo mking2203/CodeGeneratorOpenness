@@ -8,12 +8,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using Siemens.Engineering;
@@ -21,11 +16,8 @@ using Siemens.Engineering.HW;
 using Siemens.Engineering.HW.Features;
 using Siemens.Engineering.SW;
 using Siemens.Engineering.SW.Blocks;
-using Siemens.Engineering.SW.ExternalSources;
-using Siemens.Engineering.SW.Tags;
 using Siemens.Engineering.SW.Types;
 using Siemens.Engineering.Compiler;
-using Siemens.Engineering.Library;
 
 using System.IO;
 using System.Globalization;
@@ -43,6 +35,9 @@ namespace CodeGeneratorOpenness
         public static PlcSoftware software = null;
 
         private cFunctionGroups groups = new cFunctionGroups();
+
+        // first sequence test
+        private StepDataOne step = new StepDataOne();
 
         public frmMainForm()
         {
@@ -1164,6 +1159,432 @@ namespace CodeGeneratorOpenness
                     return;
                 }
             }
+        }
+
+        private void generateStepSeqenceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // as base we load a empty V14 graph
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml((GetResourceTextFile("V14SP1.xml")));
+
+            XmlSetAttribute("Engineering", "version", "V14 SP1", xmlDoc);
+
+            // 2018-02-02T09:20:05.7051255Z
+            string dt = DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss.fffffffZ");
+
+            XmlSetInnerText("Created", dt, xmlDoc);
+            XmlSetInnerText("GraphVersion", "4.0", xmlDoc);
+
+            // here we set the name fot the import
+            XmlSetInnerText("Name", "FB_SEQ_One", xmlDoc);
+            XmlSetInnerText("Number", "1234", xmlDoc);
+
+            // find "Section Static" - difficult since xPath not working
+            XmlNodeList intf = xmlDoc.SelectNodes("Document/SW.Blocks.FB/AttributeList/Interface");
+            // Sections
+            XmlNodeList sections = intf[0].ChildNodes;
+            // find Section
+            XmlNodeList section = sections[0].ChildNodes;
+
+            // select the static area
+            foreach (XmlNode x in section)
+            {
+                string aName = (x.Attributes["Name"].Value);
+                if (aName == "Static")
+                {
+                    foreach (OneStep st in step.Steps)
+                    {
+                        // add transition defination for the step
+                        AppendDefiniationTransition(xmlDoc, x, "NextStep (" + st.Number.ToString() + ")", st.Number.ToString());
+                        // add transition defination for the abort / option step
+                        if (st.AbortStep > 0) AppendDefiniationTransition(xmlDoc, x, "AbortStep (" + (st.Number + 100).ToString() + ")", (st.Number + 100).ToString());
+                        if (st.OptionStep > 0) AppendDefiniationTransition(xmlDoc, x, "OptionStep (" + (st.Number + 200).ToString() + ")", (st.Number + 200).ToString());
+                    }
+                    foreach (OneStep st in step.Steps)
+                    {
+                        // add the step defination
+                        AppendDefinationStep(xmlDoc, x, st.Description, st.Number.ToString());
+                    }
+                }
+            }
+
+            // now make the sequence
+
+            XmlNode stepList = xmlDoc.SelectSingleNode("Document/SW.Blocks.FB/ObjectList/SW.Blocks.CompileUnit/AttributeList/NetworkSource");
+            XmlNode gr = stepList.ChildNodes[0]; // graph node
+
+            // save the nodes we need
+            XmlNode seq = XmlGetChild(gr, "Sequence");
+            XmlNode steps = XmlGetChild(seq, "Steps");
+            XmlNode trans = XmlGetChild(seq, "Transitions");
+            XmlNode branch = XmlGetChild(seq, "Branches");
+            XmlNode conn = XmlGetChild(seq, "Connections");
+
+            foreach (OneStep st in step.Steps)
+            {
+                // append the steps
+                //if (st.MonitorTime == 0)
+                AppendStepData(xmlDoc, steps, st);
+                //else
+                //    AppendStep2Data(xmlDoc, child2, st);
+            }
+
+            foreach (OneStep st in step.Steps)
+            {
+                // add the transition for the step
+                AppendStepTransition(xmlDoc, trans, "Next Step (" + st.Number.ToString() + ")", st.Number.ToString());
+                // add transition for the abort / option step
+                if (st.AbortStep > 0) AppendStepTransition(xmlDoc, trans, "Abort Step (" + (st.Number + 100).ToString() + ")", (st.Number + 100).ToString());
+                if (st.OptionStep > 0) AppendStepTransition(xmlDoc, trans, "Option Step (" + (st.Number + 200).ToString() + ")", (st.Number + 200).ToString());
+            }
+
+            // now make the connections
+            foreach (OneStep st in step.Steps)
+            {
+                string source = "StepRef";
+                string sourceValue = st.Number.ToString();
+                string target = "TransitionRef";
+                string targetValue = st.Number.ToString();
+
+                if ((st.AbortStep == 0) && (st.OptionStep == 0))
+                {
+                    // 1:1 step, no abort and option
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+
+                    source = "TransitionRef";
+                    sourceValue = st.Number.ToString();
+                    target = "StepRef";
+                    targetValue = st.NextStep.ToString();
+
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+                }
+
+                if (st.AbortStep > 0)
+                {
+                    //Step 2 nach Branch 1 / 0
+                    AppendBranch(xmlDoc, branch, st);
+                    source = "StepRef";
+                    sourceValue = st.Number.ToString();
+                    target = "BranchRef";
+                    targetValue = "1/0";
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+
+                    //Branch 1 / 0 nach Trans 2
+                    source = "BranchRef";
+                    sourceValue = "1/0";
+                    target = "TransitionRef";
+                    targetValue = st.Number.ToString();
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+
+                    //Trans 2 nach Step 3
+                    source = "TransitionRef";
+                    sourceValue = st.Number.ToString();
+                    target = "StepRef";
+                    targetValue = st.NextStep.ToString();
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+
+                    //Branch 1 / 1 nach Trans 5
+                    source = "BranchRef";
+                    sourceValue = "1/1";
+                    target = "TransitionRef";
+                    targetValue = (st.Number + 100).ToString();
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+
+                    //Trans 5 nach Step 5
+                    source = "TransitionRef";
+                    sourceValue = (st.Number + 100).ToString();
+                    target = "StepRef";
+                    targetValue = st.AbortStep.ToString();
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+                }
+            }
+
+            // clean the xml
+            string xml = xmlDoc.OuterXml;
+            xml = xml.Replace("xmlns=\"\"", "");
+
+            // save the xml
+            xmlDoc.LoadXml(xml);
+
+            try
+            {
+                //string filePath = (string)Properties.Settings.Default["PathLanguageText"];
+                //if (filePath == string.Empty) filePath = Application.StartupPath + "\\Export";
+                string filePath = Application.StartupPath + "\\Import";
+
+                using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+                {
+                    saveFileDialog.Filter = "XML files (*.xml)|*.xml";
+                    saveFileDialog.FilterIndex = 1;
+                    saveFileDialog.InitialDirectory = filePath;
+                    saveFileDialog.FileName = "Graph.xml";
+
+                    if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        xmlDoc.Save(saveFileDialog.FileName);
+
+                        MessageOK("File " + Path.GetFileName(saveFileDialog.FileName) + " has been saved",
+                                  "Generate XML Graph");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageError(ex.Message,
+                             "Exception");
+            }  
+        }
+
+        // helper to load ressource file, files must be embedded
+        public string GetResourceTextFile(string filename)
+        {
+            string result = string.Empty;
+
+            using (Stream stream = this.GetType().Assembly.
+                       GetManifestResourceStream("CodeGeneratorOpenness.XML." + filename))
+            {
+                using (StreamReader sr = new StreamReader(stream))
+                {
+                    result = sr.ReadToEnd();
+                }
+            }
+            return result;
+        }
+
+        // set xml attribute
+        private void XmlSetAttribute(string name, string attribute, string value, XmlDocument document)
+        {
+            XmlNodeList f = document.GetElementsByTagName(name);
+            if (f.Count == 1)
+            {
+                XmlAttribute a = f[0].Attributes[attribute];
+                if (a != null)
+                {
+                    a.Value = value;
+                }
+                else
+                {
+                    throw new Exception("Fehler: XmlSetAttribute - Attribute " + name + " nicht gefunden!");
+                }
+            }
+            else
+            {
+                throw new Exception("Fehler: XmlSetAttribute - Node " + name + " nicht gefunden!");
+            }
+
+        }
+
+        // set xml node innter text
+        private void XmlSetInnerText(string name, string value, XmlDocument document)
+        {
+            XmlNodeList f = document.GetElementsByTagName(name);
+            if (f.Count == 1)
+            {
+                f[0].InnerText = value;
+            }
+            else
+            {
+                throw new Exception("Fehler: XmlSetInnerText - Node " + name + " nicht gefunden!");
+            }
+
+        }
+
+        // helper to find a child by name
+        public XmlNode XmlGetChild(XmlNode Node, string Name)
+        {
+            foreach (XmlNode child in Node.ChildNodes)
+            {
+                if (child.Name == Name)
+                    return child;
+            }
+            return null;
+        }
+
+        private void AppendDefiniationTransition(XmlDocument doc, XmlNode node, string name, string value)
+        {
+            XmlDocument member;
+            XmlNode mNode;
+            XmlNodeList f;
+
+            member = new XmlDocument();
+            member.LoadXml((GetResourceTextFile("TransitionPlus.xml")));
+
+            f = member.GetElementsByTagName("Member");
+            foreach (XmlNode aMember in f)
+            {
+                // we be found twice ??
+                XmlAttribute a = f[0].Attributes["Datatype"];
+                if (a != null)
+                {
+                    a = f[0].Attributes["Name"];
+                    a.Value = name;
+                }
+            }
+            f = member.GetElementsByTagName("StartValue");
+            if (f.Count == 1)
+                f[0].InnerText = value;
+
+            mNode = doc.ImportNode(member.FirstChild, true);
+            node.AppendChild(mNode);
+        }
+
+        private void AppendDefinationStep(XmlDocument doc, XmlNode node, string name, string value)
+        {
+            XmlDocument member;
+            XmlNode mNode;
+
+            member = new XmlDocument();
+            member.LoadXml((GetResourceTextFile("StepPlus.xml")));
+
+            XmlNodeList f = member.GetElementsByTagName("Member");
+            XmlAttribute a = f[0].Attributes["Name"];
+            a.Value = name;
+
+            f = member.GetElementsByTagName("StartValue");
+            //if (f.Count == 1)
+            f[0].InnerText = value;
+
+            mNode = doc.ImportNode(member.FirstChild, true);
+            node.AppendChild(mNode);
+        }
+
+        private void AppendStepData(XmlDocument doc, XmlNode node, OneStep step)
+        {
+            XmlDocument member;
+            XmlNode mNode;
+
+            member = new XmlDocument();
+            member.LoadXml((GetResourceTextFile("Step.xml")));
+
+            XmlSetAttribute("Step", "Number", step.Number.ToString(), member);
+            XmlSetAttribute("Step", "Name", step.Description, member);
+
+            if (step.Number == 1)
+            {
+                XmlSetAttribute("Step", "Init", "true", member);
+            }
+
+            XmlSetInnerText("MultiLanguageText", "Acktion Step " + step.Number.ToString(), member);
+
+            XmlNodeList l = member.GetElementsByTagName("Token");
+            foreach (XmlNode l1 in l)
+            {
+                if (l1.OuterXml.Contains("step"))
+                {
+                    l1.Attributes[0].Value = step.Number.ToString();
+                }
+            }
+
+            mNode = doc.ImportNode(member.FirstChild, true);
+            node.AppendChild(mNode);
+        }
+
+        private void AppendStepTransition(XmlDocument doc, XmlNode node, string Name, string Number)
+        {
+            XmlDocument member;
+            XmlNode mNode;
+
+            member = new XmlDocument();
+            member.LoadXml((GetResourceTextFile("Transition.xml")));
+
+            XmlSetAttribute("Transition", "Number", Number, member);
+            XmlSetAttribute("Transition", "Name", Name, member);
+
+            XmlNodeList c = member.GetElementsByTagName("ConstantValue");
+            foreach (XmlNode l1 in c)
+            {
+                if (l1.InnerText == "stepNumber")
+                {
+                    l1.InnerText = Number;
+                }
+            }
+
+            mNode = doc.ImportNode(member.FirstChild, true);
+            node.AppendChild(mNode);
+        }
+
+        private void AppendConnection(XmlDocument doc, XmlNode node, OneStep step,
+            string source, string sourceValue, string target, string targetValue)
+        {
+            XmlDocument member;
+            XmlNode mNode;
+
+            member = new XmlDocument();
+            member.LoadXml((GetResourceTextFile("Connection.xml")));
+
+            XmlNode from = member.SelectSingleNode("Connection/NodeFrom");
+            XmlNode to = member.SelectSingleNode("Connection/NodeTo");
+
+            string outValue = "";
+            if (source == "BranchRef")
+            {
+                outValue = sourceValue.Split('/')[1];
+                sourceValue = sourceValue.Split('/')[0];
+            }
+
+            XmlNode chd = member.CreateElement(source);
+            XmlAttribute attr = member.CreateAttribute("Number");
+            attr.Value = sourceValue;
+            chd.Attributes.Append(attr);
+            if (source == "BranchRef")
+            {
+                attr = member.CreateAttribute("Out");
+                attr.Value = outValue;
+                chd.Attributes.Append(attr);
+            }
+            from.AppendChild(chd);
+
+            outValue = "";
+            if (target == "BranchRef")
+            {
+                outValue = targetValue.Split('/')[1];
+                targetValue = sourceValue.Split('/')[0];
+            }
+
+            // <EndConnection/>
+
+            if (targetValue != "100")
+            {
+                chd = member.CreateElement(target);
+                attr = member.CreateAttribute("Number");
+                attr.Value = targetValue;
+                chd.Attributes.Append(attr);
+                if (target == "BranchRef")
+                {
+                    attr = member.CreateAttribute("In");
+                    attr.Value = outValue;
+                    chd.Attributes.Append(attr);
+                }
+
+                to.AppendChild(chd);
+            }
+            else
+            {
+                chd = member.CreateElement("EndConnection");
+                to.AppendChild(chd);
+            }
+
+            XmlSetInnerText("LinkType", "Direct", member);
+
+            mNode = doc.ImportNode(member.FirstChild, true);
+            node.AppendChild(mNode);
+        }
+
+        private void AppendBranch(XmlDocument doc, XmlNode node, OneStep step)
+        {
+            // todo more logic
+
+            XmlDocument member;
+            XmlNode mNode;
+
+            member = new XmlDocument();
+            member.LoadXml((GetResourceTextFile("Branch.xml")));
+
+            //XmlSetAttribute("StepRef", "Number", step.Number.ToString(), member);
+            //XmlSetAttribute("TransitionRef", "Number", step.Number.ToString(), member);
+
+            mNode = doc.ImportNode(member.FirstChild, true);
+            node.AppendChild(mNode);
         }
 
     }

@@ -1,0 +1,26 @@
+﻿<Member Name="empty separator" Datatype="G7_StepPlus_V4" Version="1.0">
+  <AttributeList>
+    <BooleanAttribute Name="ExternalAccessible" SystemDefined="true">false</BooleanAttribute>
+    <BooleanAttribute Name="ExternalVisible" SystemDefined="true">false</BooleanAttribute>
+    <BooleanAttribute Name="ExternalWritable" SystemDefined="true">false</BooleanAttribute>
+  </AttributeList>
+  <Comment Informative="true">
+    <MultiLanguageText Lang="de-DE">Schrittstruktur</MultiLanguageText>
+  </Comment>
+  <Sections>
+    <Section Name="None">
+      <Member Name="SNO" Datatype="Int">
+        <StartValue Informative="true">65</StartValue>
+      </Member>
+      <Member Name="T_MAX" Datatype="Time">
+        <StartValue Informative="true">T#10S</StartValue>
+      </Member>
+      <Member Name="T_WARN" Datatype="Time">
+        <StartValue Informative="true">T#7S</StartValue>
+      </Member>
+      <Member Name="H_SV_FLT" Datatype="Byte">
+        <StartValue Informative="true">16#04</StartValue>
+      </Member>
+    </Section>
+  </Sections>
+</Member>

@@ -1,0 +1,13 @@
+﻿<Transition IsMissing="false" Name="Trans1" Number="1" ProgrammingLanguage="LAD">
+  <FlgNet>
+    <Parts>
+      <Part Name="TrCoil" UId="21" />
+    </Parts>
+    <Wires>
+      <Wire UId="22">
+        <Powerrail />
+        <NameCon UId="21" Name="in" />
+      </Wire>
+    </Wires>
+  </FlgNet>
+</Transition>

@@ -91,6 +91,8 @@
             this.btnAddPath = new System.Windows.Forms.Button();
             this.btnXML = new System.Windows.Forms.Button();
             this.btnCombine = new System.Windows.Forms.Button();
+            this.graphToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.generateStepSeqenceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
@@ -445,6 +447,7 @@
             this.projectToolStripMenuItem,
             this.importToolStripMenuItem,
             this.exportToolStripMenuItem,
+            this.graphToolStripMenuItem,
             this.projectTextsToolStripMenuItem,
             this.languageToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -470,45 +473,45 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripMenuItem2
             // 
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(116, 6);
             // 
             // compileToolStripMenuItem
             // 
             this.compileToolStripMenuItem.Name = "compileToolStripMenuItem";
-            this.compileToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.compileToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.compileToolStripMenuItem.Text = "Compile";
             this.compileToolStripMenuItem.Click += new System.EventHandler(this.compileToolStripMenuItem_Click);
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.saveToolStripMenuItem.Text = "Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(116, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(119, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -524,14 +527,14 @@
             // blocksToolStripMenuItem
             // 
             this.blocksToolStripMenuItem.Name = "blocksToolStripMenuItem";
-            this.blocksToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.blocksToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.blocksToolStripMenuItem.Text = "PLC Blocks";
             this.blocksToolStripMenuItem.Click += new System.EventHandler(this.blocksToolStripMenuItem_Click);
             // 
             // dataTypesToolStripMenuItem
             // 
             this.dataTypesToolStripMenuItem.Name = "dataTypesToolStripMenuItem";
-            this.dataTypesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dataTypesToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
             this.dataTypesToolStripMenuItem.Text = "PLC Data types";
             this.dataTypesToolStripMenuItem.Click += new System.EventHandler(this.dataTypesToolStripMenuItem_Click);
             // 
@@ -627,6 +630,21 @@
             this.btnCombine.Text = "Combine";
             this.btnCombine.UseVisualStyleBackColor = true;
             this.btnCombine.Click += new System.EventHandler(this.btnCombine_Click);
+            // 
+            // graphToolStripMenuItem
+            // 
+            this.graphToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.generateStepSeqenceToolStripMenuItem});
+            this.graphToolStripMenuItem.Name = "graphToolStripMenuItem";
+            this.graphToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.graphToolStripMenuItem.Text = "Graph";
+            // 
+            // generateStepSeqenceToolStripMenuItem
+            // 
+            this.generateStepSeqenceToolStripMenuItem.Name = "generateStepSeqenceToolStripMenuItem";
+            this.generateStepSeqenceToolStripMenuItem.Size = new System.Drawing.Size(194, 22);
+            this.generateStepSeqenceToolStripMenuItem.Text = "Generate Step Seqence";
+            this.generateStepSeqenceToolStripMenuItem.Click += new System.EventHandler(this.generateStepSeqenceToolStripMenuItem_Click);
             // 
             // frmMainForm
             // 
@@ -754,6 +772,8 @@
         private System.Windows.Forms.ToolStripMenuItem englishToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem germanToolStripMenuItem;
         private System.Windows.Forms.Button btnCombine;
+        private System.Windows.Forms.ToolStripMenuItem graphToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem generateStepSeqenceToolStripMenuItem;
     }
 }
 

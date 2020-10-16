@@ -79,6 +79,7 @@
     <Compile Include="frmReadStructure.Designer.cs">
       <DependentUpon>frmReadStructure.cs</DependentUpon>
     </Compile>
+    <Compile Include="StepDataOne.cs" />
     <EmbeddedResource Include="frmMainForm.resx">
       <DependentUpon>frmMainForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -110,6 +111,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="codeGenerator.ico" />
+    <EmbeddedResource Include="XML\Connection.xml" />
+    <EmbeddedResource Include="XML\Branch.xml" />
+    <EmbeddedResource Include="XML\Step.xml" />
+    <EmbeddedResource Include="XML\Transition.xml" />
+    <EmbeddedResource Include="XML\StepPlus.xml" />
+    <EmbeddedResource Include="XML\TransitionPlus.xml" />
+    <EmbeddedResource Include="XML\V14SP1.xml" />
     <EmbeddedResource Include="Ressources\DataType.png" />
     <EmbeddedResource Include="Ressources\safeDB.png" />
     <EmbeddedResource Include="Ressources\safeFB.png" />

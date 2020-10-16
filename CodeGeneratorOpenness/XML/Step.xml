@@ -1,0 +1,37 @@
+﻿<Step Number="" Init="false" Name="" MaximumStepTime="T#10S" WarningTime="T#7S">
+  <Actions>
+    <Title>
+	    <MultiLanguageText Lang="de-DE">My Step X</MultiLanguageText>
+    </Title>
+  </Actions>
+  <Supervisions>
+    <Supervision ProgrammingLanguage="LAD">
+      <FlgNet>
+        <Parts>
+          <Part Name="SvCoil" UId="21" />
+        </Parts>
+        <Wires>
+          <Wire UId="22">
+            <Powerrail/>
+            <NameCon UId="21" Name="in"/>
+          </Wire>
+        </Wires>
+      </FlgNet>
+    </Supervision>
+  </Supervisions>
+  <Interlocks>
+    <Interlock ProgrammingLanguage="LAD">
+      <FlgNet>
+        <Parts>
+          <Part Name="IlCoil" UId="21" />
+        </Parts>
+        <Wires>
+          <Wire UId="22">
+            <Powerrail/>
+            <NameCon UId="21" Name="in"/>
+          </Wire>
+        </Wires>
+      </FlgNet>
+    </Interlock>
+  </Interlocks>
+</Step>
