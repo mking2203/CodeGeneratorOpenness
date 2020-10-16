@@ -34,12 +34,13 @@ namespace CodeGeneratorOpenness
             }
             string name = args.Name.Substring(0, index) + ".dll";
 
-            // see what dll we can use
+            // see what dll we can use (incomplete)
             string path = Path.Combine(@"C:\Program Files\Siemens\Automation\Portal V16\PublicAPI\V16", name);
             if (!File.Exists(path))
             {
                 //path = Path.Combine(@"C:\Program Files\Siemens\Automation\Portal V14\PublicAPI\V14 SP1", name);
                 //Version = "14.0";
+                Version = "16.0";
             }
             else
                 Version = "16.0";
