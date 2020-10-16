@@ -6,24 +6,13 @@
 /// cFunctionGroup contains some functions for blocks (recursive)
 ///
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
 
-using Siemens.Engineering;
-using Siemens.Engineering.HW;
-using Siemens.Engineering.HW.Features;
 using Siemens.Engineering.SW;
 using Siemens.Engineering.SW.Blocks;
-using Siemens.Engineering.SW.ExternalSources;
-using Siemens.Engineering.SW.Tags;
 using Siemens.Engineering.SW.Types;
-using Siemens.Engineering.Compiler;
-using Siemens.Engineering.Library;
 
 namespace CodeGeneratorOpenness
 {

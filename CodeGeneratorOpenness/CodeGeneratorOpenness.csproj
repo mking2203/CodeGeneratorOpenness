@@ -80,6 +80,7 @@
       <DependentUpon>frmReadStructure.cs</DependentUpon>
     </Compile>
     <Compile Include="StepDataOne.cs" />
+    <Compile Include="UNC.cs" />
     <EmbeddedResource Include="frmMainForm.resx">
       <DependentUpon>frmMainForm.cs</DependentUpon>
     </EmbeddedResource>

@@ -1239,6 +1239,9 @@ namespace CodeGeneratorOpenness
             }
 
             // now make the connections
+            int idx = 0;
+            int branchNo = 0;
+
             foreach (OneStep st in step.Steps)
             {
                 string source = "StepRef";
@@ -1249,54 +1252,96 @@ namespace CodeGeneratorOpenness
                 if ((st.AbortStep == 0) && (st.OptionStep == 0))
                 {
                     // 1:1 step, no abort and option
-                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue, false);
 
                     source = "TransitionRef";
                     sourceValue = st.Number.ToString();
                     target = "StepRef";
                     targetValue = st.NextStep.ToString();
 
-                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+                    bool jump = false;
+
+                    // last step then jump
+                    if (st.Number == step.Steps[step.Steps.Count - 1].Number)
+                        jump = true;
+                    else
+                    { // not last step
+                        // next step not behind then jump
+                        if (st.Number == step.Steps[idx + 1].Number)
+                            jump = true;
+                    }
+
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue, jump);
                 }
 
-                if (st.AbortStep > 0)
+                if ((st.AbortStep > 0) || (st.OptionStep > 0))
                 {
-                    //Step 2 nach Branch 1 / 0
-                    AppendBranch(xmlDoc, branch, st);
+                    branchNo++;
+                    int outConn = 0;
+
+                    // add a branch
+                    AppendBranch(xmlDoc, branch, st, branchNo);
+
                     source = "StepRef";
                     sourceValue = st.Number.ToString();
                     target = "BranchRef";
-                    targetValue = "1/0";
-                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+                    targetValue = branchNo.ToString() + "/0";
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue, false);
 
-                    //Branch 1 / 0 nach Trans 2
+                    // straight way to transition
                     source = "BranchRef";
-                    sourceValue = "1/0";
+                    sourceValue = branchNo.ToString() + "/" + outConn.ToString();
                     target = "TransitionRef";
                     targetValue = st.Number.ToString();
-                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue, false);
 
-                    //Trans 2 nach Step 3
+                    // straight to step
                     source = "TransitionRef";
                     sourceValue = st.Number.ToString();
                     target = "StepRef";
                     targetValue = st.NextStep.ToString();
-                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue, false);
 
-                    //Branch 1 / 1 nach Trans 5
-                    source = "BranchRef";
-                    sourceValue = "1/1";
-                    target = "TransitionRef";
-                    targetValue = (st.Number + 100).ToString();
-                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+                    if (st.AbortStep != 0)
+                    {
+                        outConn++;
 
-                    //Trans 5 nach Step 5
-                    source = "TransitionRef";
-                    sourceValue = (st.Number + 100).ToString();
-                    target = "StepRef";
-                    targetValue = st.AbortStep.ToString();
-                    AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue);
+                        // branch to abort path
+                        source = "BranchRef";
+                        sourceValue = branchNo.ToString() + "/" + outConn; ;
+                        target = "TransitionRef";
+                        targetValue = (st.Number + 100).ToString();
+                        AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue, false);
+
+                        // from trans to target (jump)
+                        source = "TransitionRef";
+                        sourceValue = (st.Number + 100).ToString();
+                        target = "StepRef";
+                        targetValue = st.AbortStep.ToString();
+                        AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue, true);
+                    }
+
+                    if (st.OptionStep != 0)
+                    {
+                        outConn++;
+
+                        // branch to abort path
+                        source = "BranchRef";
+                        sourceValue = branchNo.ToString() + "/" + outConn; ;
+                        target = "TransitionRef";
+                        targetValue = (st.Number + 200).ToString();
+                        AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue, false);
+
+                        // from trans to target (jump)
+                        source = "TransitionRef";
+                        sourceValue = (st.Number + 200).ToString();
+                        target = "StepRef";
+                        targetValue = st.OptionStep.ToString();
+                        AppendConnection(xmlDoc, conn, st, source, sourceValue, target, targetValue, true);
+                    }
                 }
+
+                idx++;
             }
 
             // clean the xml
@@ -1332,7 +1377,7 @@ namespace CodeGeneratorOpenness
             {
                 MessageError(ex.Message,
                              "Exception");
-            }  
+            }
         }
 
         // helper to load ressource file, files must be embedded
@@ -1464,7 +1509,7 @@ namespace CodeGeneratorOpenness
                 XmlSetAttribute("Step", "Init", "true", member);
             }
 
-            XmlSetInnerText("MultiLanguageText", "Acktion Step " + step.Number.ToString(), member);
+            XmlSetInnerText("MultiLanguageText", "Action Step " + step.Number.ToString(), member);
 
             XmlNodeList l = member.GetElementsByTagName("Token");
             foreach (XmlNode l1 in l)
@@ -1504,7 +1549,7 @@ namespace CodeGeneratorOpenness
         }
 
         private void AppendConnection(XmlDocument doc, XmlNode node, OneStep step,
-            string source, string sourceValue, string target, string targetValue)
+            string source, string sourceValue, string target, string targetValue, bool jump)
         {
             XmlDocument member;
             XmlNode mNode;
@@ -1538,7 +1583,7 @@ namespace CodeGeneratorOpenness
             if (target == "BranchRef")
             {
                 outValue = targetValue.Split('/')[1];
-                targetValue = sourceValue.Split('/')[0];
+                targetValue = targetValue.Split('/')[0];
             }
 
             // <EndConnection/>
@@ -1564,13 +1609,16 @@ namespace CodeGeneratorOpenness
                 to.AppendChild(chd);
             }
 
-            XmlSetInnerText("LinkType", "Direct", member);
+            if (!jump)
+                XmlSetInnerText("LinkType", "Direct", member);
+            else
+                XmlSetInnerText("LinkType", "Jump", member);
 
             mNode = doc.ImportNode(member.FirstChild, true);
             node.AppendChild(mNode);
         }
 
-        private void AppendBranch(XmlDocument doc, XmlNode node, OneStep step)
+        private void AppendBranch(XmlDocument doc, XmlNode node, OneStep step, int branchNo)
         {
             // todo more logic
 
@@ -1580,8 +1628,12 @@ namespace CodeGeneratorOpenness
             member = new XmlDocument();
             member.LoadXml((GetResourceTextFile("Branch.xml")));
 
-            //XmlSetAttribute("StepRef", "Number", step.Number.ToString(), member);
-            //XmlSetAttribute("TransitionRef", "Number", step.Number.ToString(), member);
+            int c = 1;
+            if (step.AbortStep != 0) c = c + 1;
+            if (step.OptionStep != 0) c = c + 1;
+
+            XmlSetAttribute("Branch", "Number", branchNo.ToString(), member);
+            XmlSetAttribute("Branch", "Cardinality",c.ToString(), member);
 
             mNode = doc.ImportNode(member.FirstChild, true);
             node.AppendChild(mNode);

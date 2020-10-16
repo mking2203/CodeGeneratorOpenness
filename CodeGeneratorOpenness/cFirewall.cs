@@ -31,7 +31,12 @@ namespace CodeGeneratorOpenness
             byte[] hash = hashAlgorithm.ComputeHash(stream);
             // this is how the hash should appear in the .reg file
             string convertedHash = Convert.ToBase64String(hash);
+
+            // get the path of the application
             FileInfo fileInfo = new FileInfo(applicationPath);
+            // since I'm working with mapped drives we need the UNC path here
+            string uncPath = Pathing.GetUNCPath(applicationPath);
+            
             lastWriteTimeUtc = fileInfo.LastWriteTimeUtc;
             // this is how the last write time should be formatted
             lastWriteTimeUtcFormatted = lastWriteTimeUtc.ToString(@"yyyy\/MM\/dd HH:mm:ss.fff");
@@ -43,6 +48,7 @@ namespace CodeGeneratorOpenness
                 RegistryKey rk = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Siemens\Automation\Openness\" + Program.Version + @"\Whitelist\CodeGeneratorOpenness.exe\Entry", true);
                 rk.SetValue("FileHash", convertedHash);
                 rk.SetValue("DateModified", lastWriteTimeUtcFormatted);
+                rk.SetValue("Path", uncPath);
             }
             catch
             { }
