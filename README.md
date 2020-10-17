@@ -53,7 +53,7 @@ Screenshot:
 
 <br>
 <br>
-Some code for the graph generation is "reversed engineered" since there is no description. In my case I used the openness scripter in the version 14 to export some graph's to understand the structure. See the scripts I added in the OPNS folder. Also I added some samöes of some generated step sequence in the sample folder. Right now there is only a "step class" which is doing the configuration. In the futrue I will plan to use a excel file to read the config.
+Some code for the graph generation is "reversed engineered" since there is no description. In my case I used the openness scripter in the version 14 to export a couple graph's to understand the structure. See the scripts I added in the OPNS folder. Some generated step sequence for testing are in the sample folder. Right now there is only one "step class" which is doing the configuration. In the futrue I will plan to use a excel file to read the config.
 <br>
 <br>
 For the sequence generation I used a V14 sample of an empty seqeunce. In the XML we need to add transitions and steps into the static area (change in later versions) Then I enumerate through my defined steps to build the sequence including transitions and branches. Of course I can not cover 100% of any posibility, so my sequences are straight forward - only with alternate branches and jumps. In the next version I will also cover actions and supervisions for each step.
