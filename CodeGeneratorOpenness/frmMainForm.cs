@@ -531,7 +531,13 @@ namespace CodeGeneratorOpenness
 
                     using (OpenFileDialog openFileDialog = new OpenFileDialog())
                     {
-                        openFileDialog.Filter = "V16 project files (*.ap16)|*.ap16|All files (*.*)|*.*";
+                        string filter = "V17 project files (*.ap17)|*.ap17|All files (*.*)|*.*";
+                        if (Program.Version == "16.0") filter = "V16 project files (*.ap16)|*.ap16|All files (*.*)|*.*";
+                        if (Program.Version == "15.1") filter = "V15.1 project files (*.ap15_1)|*.ap15_1|All files (*.*)|*.*";
+                        if (Program.Version == "15.0") filter = "V15 project files (*.ap15)|*.ap15|All files (*.*)|*.*";
+                        if (Program.Version == "14.0") filter = "V14 project files (*.ap14)|*.ap14|All files (*.*)|*.*";
+
+                        openFileDialog.Filter = filter;
                         openFileDialog.FilterIndex = 1;
                         openFileDialog.InitialDirectory = filePath;
 
@@ -1633,7 +1639,7 @@ namespace CodeGeneratorOpenness
             if (step.OptionStep != 0) c = c + 1;
 
             XmlSetAttribute("Branch", "Number", branchNo.ToString(), member);
-            XmlSetAttribute("Branch", "Cardinality",c.ToString(), member);
+            XmlSetAttribute("Branch", "Cardinality", c.ToString(), member);
 
             mNode = doc.ImportNode(member.FirstChild, true);
             node.AppendChild(mNode);

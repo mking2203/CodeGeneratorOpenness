@@ -101,7 +101,7 @@ namespace CodeGeneratorOpenness
                     }
                 }
                 else if (plcBlock is GlobalDB)
-                {
+                { 
                     n = new TreeNode(plcBlock.Name + " [DB" + plcBlock.Number.ToString() + "]");
                     n.Tag = plcBlock;
                     n.ImageIndex = 5;
@@ -114,9 +114,30 @@ namespace CodeGeneratorOpenness
                         n.ImageIndex = 6;
                     }
                 }
+                else if (plcBlock is ArrayDB)
+                {
+                    n = new TreeNode(plcBlock.Name + " [DB" + plcBlock.Number.ToString() + "]");
+                    n.Tag = plcBlock;
+                    n.ImageIndex = 5;
 
-                n.SelectedImageIndex = n.ImageIndex;
-                node.Nodes.Add(n);
+                    ArrayDB db = (ArrayDB)plcBlock;
+                    n.Name = db.Name + "[FB" + db.Number.ToString() + "]";
+                    if (db.ProgrammingLanguage == ProgrammingLanguage.F_DB)
+                    {
+                        n.BackColor = Color.Yellow;
+                        n.ImageIndex = 6;
+                    }
+                }
+
+                if (n != null)
+                {
+                    n.SelectedImageIndex = n.ImageIndex;
+                    node.Nodes.Add(n);
+                }
+                else
+                {
+                    MessageBox.Show("Not found: " + plcBlock.Name);
+                }
             }
 
             // then add groups and search recursive
