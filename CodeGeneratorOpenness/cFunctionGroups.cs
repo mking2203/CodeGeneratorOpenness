@@ -18,24 +18,32 @@ namespace CodeGeneratorOpenness
 {
     class cFunctionGroups
     {
-        public void LoadTreeView(TreeView Tree, PlcSoftware Software)
+        public void ClearTreeView(TreeView Tree)
         {
             Tree.Nodes.Clear();
+        }
 
+        public void LoadTreeView(TreeView Tree, PlcSoftware Software)
+        {
             // start update treeview
             Tree.BeginUpdate();
 
             // add root node
             TreeNode root = new TreeNode(Software.Name);
-            root.Tag = Software.BlockGroup;
             Tree.Nodes.Add(root);
 
-            AddPlcBlocks(Software.BlockGroup, root);
+            // Add Program Blocks
+            TreeNode programBlocks = new TreeNode("Program Blocks");
+            programBlocks.Tag = Software.BlockGroup;
+            root.Nodes.Add(programBlocks);
+
+            AddPlcBlocks(Software.BlockGroup, programBlocks);
+            programBlocks.Expand();
 
             // add data types
-            TreeNode dataTypes = new TreeNode("Data types");
+            TreeNode dataTypes = new TreeNode("PLC Data types");
             dataTypes.Tag = Software.TypeGroup;
-            Tree.Nodes.Add(dataTypes);
+            root.Nodes.Add(dataTypes);
 
             AddPlcTypes(Software.TypeGroup, dataTypes);
             dataTypes.Expand();

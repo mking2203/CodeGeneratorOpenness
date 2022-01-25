@@ -107,6 +107,8 @@ namespace CodeGeneratorOpenness
 
             Application.DoEvents();
 
+            groups.ClearTreeView(treeView1);
+
             // search through devices
             foreach (Device device in project.Devices)
             {
