@@ -300,10 +300,17 @@ namespace CodeGeneratorOpenness
             //for the root node we can't delete the group
             if (node_here.Parent == null)
                 ctxGroup.MenuItems[2].Enabled = false;
+            // we dont want level 0/1
+            if (node_here.Level < 2)
+                ctxGroup.MenuItems[2].Enabled = false;
 
             // See what kind of object this is and
             // display the appropriate popup menu.
             if (node_here.Tag is PlcSoftware)
+            {
+                ctxSoftware.Show(treeView1, new Point(e.X, e.Y));
+            }
+            if (node_here.Tag is PlcTypeSystemGroup)
             {
                 ctxSoftware.Show(treeView1, new Point(e.X, e.Y));
             }
@@ -398,8 +405,6 @@ namespace CodeGeneratorOpenness
 
         private void menuGroupAdd_Click(object sender, EventArgs e)
         {
-            PlcBlockGroup group = (PlcBlockGroup)treeView1.SelectedNode.Tag;
-
             string name = string.Empty;
             DialogResult dlg = Input.InputBox("Enter new group name", "New group", ref name);
 
@@ -407,30 +412,54 @@ namespace CodeGeneratorOpenness
             {
                 if (name != string.Empty)
                 {
-                    if (!groups.GroupExists(name, group))
+                    System.Diagnostics.Debug.Print(treeView1.SelectedNode.Tag.ToString());
+                    if (treeView1.SelectedNode.Tag.ToString() == "Siemens.Engineering.SW.Blocks.PlcBlockSystemGroup")
                     {
-                        try
-                        {
-                            group.Groups.Create(name);
-                            IterateThroughDevices(project);
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageError(ex.Message, "Exception");
-                        }
-                    }
-                    else
-                        MessageError(name + " exist already", "Name exist already");
+                        PlcBlockSystemGroup soft = (PlcBlockSystemGroup)treeView1.SelectedNode.Tag;
+                        PlcBlockUserGroupComposition group = soft.Groups;
 
+                        if (!groups.GroupBlockExists(name, group))
+                        {
+                            try
+                            {
+                                group.Create(name);
+                                IterateThroughDevices(project);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageError(ex.Message, "Exception");
+                            }
+                        }
+                        else
+                            MessageError(name + " exist already", "Name exist already");
+                    }
+                    else if (treeView1.SelectedNode.Tag.ToString() == "Siemens.Engineering.SW.Types.PlcTypeSystemGroup")
+                    {
+                        PlcTypeSystemGroup soft = (PlcTypeSystemGroup)treeView1.SelectedNode.Tag;
+                        PlcTypeUserGroupComposition group = soft.Groups;
+
+                        if (!groups.GroupTypeExists(name, group))
+                        {
+                            try
+                            {
+                                group.Create(name);
+                                IterateThroughDevices(project);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageError(ex.Message, "Exception");
+                            }
+                        }
+                        else
+                            MessageError(name + " exist already", "Name exist already");
+
+                    }
                 }
             }
         }
 
         private void menuSofwareAdd_Click(object sender, EventArgs e)
         {
-            PlcSoftware soft = (PlcSoftware)treeView1.SelectedNode.Tag;
-            PlcBlockGroup group = soft.BlockGroup;
-
             string name = string.Empty;
             DialogResult dlg = Input.InputBox("Enter new group name", "New group", ref name);
 
@@ -438,20 +467,48 @@ namespace CodeGeneratorOpenness
             {
                 if (name != string.Empty)
                 {
-                    if (!groups.GroupExists(name, group))
+                    System.Diagnostics.Debug.Print(treeView1.SelectedNode.Tag.ToString());
+                    if (treeView1.SelectedNode.Tag.ToString() == "Siemens.Engineering.SW.Blocks.PlcBlockSystemGroup")
                     {
-                        try
+                        PlcBlockSystemGroup soft = (PlcBlockSystemGroup)treeView1.SelectedNode.Tag;
+                        PlcBlockUserGroupComposition group = soft.Groups;
+
+                        if (!groups.GroupBlockExists(name, group))
                         {
-                            group.Groups.Create(name);
-                            IterateThroughDevices(project);
+                            try
+                            {
+                                group.Create(name);
+                                IterateThroughDevices(project);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageError(ex.Message, "Exception");
+                            }
                         }
-                        catch (Exception ex)
-                        {
-                            MessageError(ex.Message, "Exception");
-                        }
+                        else
+                            MessageError(name + " exist already", "Name exist already");
                     }
-                    else
-                        MessageError(name + " exist already", "Name exist already");
+                    else if (treeView1.SelectedNode.Tag.ToString() == "Siemens.Engineering.SW.Types.PlcTypeSystemGroup")
+                    {
+                        PlcTypeSystemGroup soft = (PlcTypeSystemGroup)treeView1.SelectedNode.Tag;
+                        PlcTypeUserGroupComposition group = soft.Groups;
+
+                        if (!groups.GroupTypeExists(name, group))
+                        {
+                            try
+                            {
+                                group.Create(name);
+                                IterateThroughDevices(project);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageError(ex.Message, "Exception");
+                            }
+                        }
+                        else
+                            MessageError(name + " exist already", "Name exist already");
+
+                    }
                 }
             }
         }
@@ -969,7 +1026,7 @@ namespace CodeGeneratorOpenness
             if (software != null)
             {
                 string[] lst = txtPath.Text.Split('\\');
-                PlcBlockGroup group = software.BlockGroup;
+                PlcBlockSystemGroup group = software.BlockGroup;
 
                 foreach (string p in lst)
                 {
@@ -994,7 +1051,7 @@ namespace CodeGeneratorOpenness
                     }
 
                     // into next group
-                    group = group.Groups.Find(name);
+                    //group = group.Groups.Find(name);
                 }
 
                 IterateThroughDevices(project);
@@ -1274,7 +1331,7 @@ namespace CodeGeneratorOpenness
                         jump = true;
                     else
                     { // not last step
-                        // next step not behind then jump
+                      // next step not behind then jump
                         if (st.Number == step.Steps[idx + 1].Number)
                             jump = true;
                     }
