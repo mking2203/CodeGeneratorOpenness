@@ -903,7 +903,7 @@ namespace CodeGeneratorOpenness
                         {
                             string fPath = Application.StartupPath + "\\Export\\plcType_" +
                                 block.Name + "_" +
-                                block.ModifiedDate.ToShortDateString() +
+                                block.ModifiedDate.ToString("yyyyMMdd") +
                                 ".xml";
                             fPath = GetNextFileName(fPath);
 
