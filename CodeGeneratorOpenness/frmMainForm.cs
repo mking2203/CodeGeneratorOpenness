@@ -314,6 +314,10 @@ namespace CodeGeneratorOpenness
             {
                 ctxSoftware.Show(treeView1, new Point(e.X, e.Y));
             }
+            if (node_here.Tag is PlcTypeUserGroup)
+            {
+                ctxGroup.Show(treeView1, new Point(e.X, e.Y));
+            }
             if (node_here.Tag is PlcBlockGroup)
             {
                 ctxGroup.Show(treeView1, new Point(e.X, e.Y));
@@ -369,38 +373,45 @@ namespace CodeGeneratorOpenness
 
         private void menuGroupDelete_Click(object sender, EventArgs e)
         {
-            // delete group
-            PlcBlockGroup group = (PlcBlockGroup)treeView1.SelectedNode.Tag;
-
-            if (group.Blocks.Count > 0)
+            if (treeView1.SelectedNode.Tag is PlcBlockGroup)
             {
-                MessageOK("The group " + group.Name + " has sub blocks!\nDelete this blocks first", "Delete group");
-                return;
-            }
-
-            if (group.Groups.Count > 0)
-            {
-                MessageOK("The group " + group.Name + " has sub groups!\nDelete this groups first", "Delete group");
-                return;
-            }
-
-            if (MessageYesNo("Do you really want to delete the group " + group.Name + "?", "Delete block") == DialogResult.Yes)
-            {
-                // not implemented yet, there is no method to delete a group?    
-
-                // code from Tia Example is using invoke
-                var selectedProjectObject = treeView1.SelectedNode.Tag;
-                try
+                var group1 = (PlcBlockGroup)treeView1.SelectedNode.Tag;
+                if (group1 != null)
                 {
-                    var engineeringObject = selectedProjectObject as IEngineeringObject;
-                    engineeringObject?.Invoke("Delete", new Dictionary<Type, object>());
+                    if (group1.Blocks.Count > 0)
+                    {
+                        MessageOK("The group " + group1.Name + " has sub blocks!\nDelete this blocks first", "Delete group");
+                        return;
+                    }
                 }
-                catch (EngineeringException)
-                {
-
-                }
-                IterateThroughDevices(project);
             }
+
+            if (treeView1.SelectedNode.Tag is PlcTypeUserGroup)
+            {
+                var group2 = (PlcTypeUserGroup)treeView1.SelectedNode.Tag;
+                if (group2 != null)
+                {
+                    if(group2.Groups.Count > 0)
+                    {
+                        MessageOK("The type group " + group2.Name + " has sub blocks!\nDelete this blocks first", "Delete group");
+                        return;
+                    }
+                }
+            }
+
+            // code from Tia Example is using invoke
+            var selectedProjectObject = treeView1.SelectedNode.Tag;
+            try
+            {
+                var engineeringObject = selectedProjectObject as IEngineeringObject;
+                engineeringObject?.Invoke("Delete", new Dictionary<Type, object>());
+            }
+            catch (EngineeringException)
+            {
+
+            }
+            IterateThroughDevices(project);
+
         }
 
         private void menuGroupAdd_Click(object sender, EventArgs e)
@@ -436,6 +447,27 @@ namespace CodeGeneratorOpenness
                     else if (treeView1.SelectedNode.Tag.ToString() == "Siemens.Engineering.SW.Types.PlcTypeSystemGroup")
                     {
                         PlcTypeSystemGroup soft = (PlcTypeSystemGroup)treeView1.SelectedNode.Tag;
+                        PlcTypeUserGroupComposition group = soft.Groups;
+
+                        if (!groups.GroupTypeExists(name, group))
+                        {
+                            try
+                            {
+                                group.Create(name);
+                                IterateThroughDevices(project);
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageError(ex.Message, "Exception");
+                            }
+                        }
+                        else
+                            MessageError(name + " exist already", "Name exist already");
+
+                    }
+                    else if (treeView1.SelectedNode.Tag.ToString() == "Siemens.Engineering.SW.Types.PlcTypeUserGroup")
+                    {
+                        PlcTypeUserGroup soft = (PlcTypeUserGroup)treeView1.SelectedNode.Tag;
                         PlcTypeUserGroupComposition group = soft.Groups;
 
                         if (!groups.GroupTypeExists(name, group))
