@@ -1,0 +1,17 @@
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.csproj.AssemblyReference.cache
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.csproj.SuggestedBindingRedirects.cache
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.frmMainForm.resources
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.Properties.Resources.resources
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.frmReadStructure.resources
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.csproj.GenerateResource.cache
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.csproj.CoreCompileInputs.cache
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\bin\Debug\CodeGeneratorOpenness.exe.config
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\bin\Debug\CodeGeneratorOpenness.exe
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\bin\Debug\CodeGeneratorOpenness.pdb
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\bin\Debug\Siemens.Engineering.dll
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\bin\Debug\Siemens.Engineering.Hmi.dll
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\bin\Debug\Siemens.Engineering.xml
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\bin\Debug\Siemens.Engineering.Hmi.xml
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.csproj.CopyComplete
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.exe
+C:\Users\tomle\Downloads\CodeGeneratorOpenness-master\CodeGeneratorOpenness\obj\Debug\CodeGeneratorOpenness.pdb
