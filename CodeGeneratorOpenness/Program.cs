@@ -30,6 +30,11 @@ namespace CodeGeneratorOpenness
                 var names = key.GetSubKeyNames().OrderBy(x => x).ToList();
                 foreach (string n in names)
                 {
+                    if (n.Contains("TIA Portal V18"))
+                    {
+                        Version = "18.0";
+                        Api = @"C:\Program Files\Siemens\Automation\Portal V18\PublicAPI\V18";
+                    }
                     if (n.Contains("TIA Portal V17"))
                     {
                         Version = "17.0";
